@@ -1,0 +1,54 @@
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.exe
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.deps.json
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.runtimeconfig.json
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.runtimeconfig.dev.json
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.pdb
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\ConcurrentCollections.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.CommandsNext.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.Interactivity.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Emzi0767.Common.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\System.Threading.Channels.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.csproj.AssemblyReference.cache
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.AssemblyInfoInputs.cache
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.AssemblyInfo.cs
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.csproj.CoreCompileInputs.cache
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.csproj.CopyComplete
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.dll
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.pdb
+C:\Users\Denys\source\repos\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.genruntimeconfig.cache
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.exe
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.deps.json
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.runtimeconfig.json
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.runtimeconfig.dev.json
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Discord Bot.pdb
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\ConcurrentCollections.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.CommandsNext.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.Interactivity.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Emzi0767.Common.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\bin\Debug\netcoreapp3.1\System.Threading.Channels.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.csproj.AssemblyReference.cache
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.GeneratedMSBuildEditorConfig.editorconfig
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.AssemblyInfoInputs.cache
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.AssemblyInfo.cs
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.csproj.CoreCompileInputs.cache
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.csproj.CopyComplete
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.dll
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.pdb
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\Discord Bot.genruntimeconfig.cache
