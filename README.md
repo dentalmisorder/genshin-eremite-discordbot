@@ -11,3 +11,7 @@ It is made just for fun, you can modify literally anything, im gonna develop the
 > [My server (if u need help)](https://discord.gg/4wTnnTbPgz)
 
 ![Here should have been a screenshot, guess hosting died](https://i.ibb.co/HYxY9h4/Screenshot-2.png "screenshot (WIP)")
+
+# Credits
+
+> Thanks to [Enka.Network](https://github.com/EnkaNetwork) for [API](https://github.com/EnkaNetwork/API-docs) provided, and [DevilTakoyaki](https://twitter.com/deviltakoyaki) for materials provided.

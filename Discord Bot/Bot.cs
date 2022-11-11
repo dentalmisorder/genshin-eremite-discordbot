@@ -5,6 +5,7 @@ using DSharpPlus;
 using DSharpPlus.EventArgs;
 using DSharpPlus.CommandsNext;
 using Newtonsoft.Json;
+using DiscordBot.Services;
 
 namespace DiscordBot
 {
@@ -19,6 +20,12 @@ namespace DiscordBot
         protected JsonConfig jsonConfig;
         protected DiscordConfiguration discordConfig;
         protected CommandsNextConfiguration commandsConfig;
+        protected ServicesProvider servicesProvider;
+
+        public void SetupServices(ServicesProvider provider)
+        {
+            servicesProvider = provider;
+        }
 
         public async Task RunAsync()
         {
@@ -29,9 +36,11 @@ namespace DiscordBot
 
             Client = new DiscordClient(discordConfig);
             Client.Ready += OnBotWokeUp;
+            Client.SocketErrored += OnSocketError;
+            Client.ClientErrored += OnClientError;
 
             commandsConfig = SetupCommandsConfig();
-            
+
             //Regestering commands, NOTIFY!: If u do another class with commands, dont forget to register
             Commands = Client.UseCommandsNext(commandsConfig);
             Commands.RegisterCommands<MainCommands>();
@@ -69,11 +78,6 @@ namespace DiscordBot
             return config;
         }
 
-        private Task OnBotWokeUp(DiscordClient client, ReadyEventArgs args)
-        {
-            return Task.CompletedTask;
-        }
-
         protected CommandsNextConfiguration SetupCommandsConfig()
         {
             var commands = new CommandsNextConfiguration();
@@ -84,6 +88,27 @@ namespace DiscordBot
             commands.EnableMentionPrefix = true;
 
             return commands;
+        }
+
+        private Task OnClientError(DiscordClient sender, ClientErrorEventArgs e)
+        {
+            if (e.Handled) return Task.CompletedTask;
+
+            Program.Init();
+            return Task.CompletedTask;
+        }
+
+        private Task OnSocketError(DiscordClient sender, SocketErrorEventArgs e)
+        {
+            if (e.Handled) return Task.CompletedTask;
+
+            Program.Init();
+            return Task.CompletedTask;
+        }
+
+        private Task OnBotWokeUp(DiscordClient client, ReadyEventArgs args)
+        {
+            return Task.CompletedTask;
         }
     }
 }
