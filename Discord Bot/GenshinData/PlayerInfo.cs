@@ -25,7 +25,7 @@ namespace DiscordBot.GenshinData
         public int towerLevelIndex;
 
         [JsonProperty("showNameCardIdList")]
-        public int showNameCardIdList;
+        public List<int> showNameCardIdList = new List<int>();
         [JsonProperty("showAvatarInfoList")]
         public List<ShowAvatarInfoList> showAvatarInfoList = new List<ShowAvatarInfoList>();
         [JsonProperty("profilePicture")]

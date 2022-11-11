@@ -8,7 +8,7 @@ namespace DiscordBot.GenshinData
     public class NamecardSettings
     {
         [JsonProperty("nameTextMapHash")]
-        public int nameTextMapHash;
+        public long nameTextMapHash;
 
         [JsonProperty("icon")]
         public string icon;

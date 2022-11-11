@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace DiscordBot.GenshinData
 {
@@ -9,6 +10,6 @@ namespace DiscordBot.GenshinData
         [JsonProperty("promoteLevel")]
         public int promoteLevel;
         [JsonProperty("affixMap")]
-        public int affixMap;
+        public Dictionary<int, int> affixMap = new Dictionary<int, int>();
     }
 }

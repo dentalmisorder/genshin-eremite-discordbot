@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using System.Text;
+using System.Collections.Generic;
 
 namespace DiscordBot.GenshinData
 {
@@ -10,8 +11,8 @@ namespace DiscordBot.GenshinData
         [JsonProperty("playerInfo")]
         public PlayerInfo playerInfo;
         [JsonProperty("avatarInfoList")]
-        public AvatarInfoList avatarInfoList;
+        public List<AvatarInfoList> avatarInfoList = new List<AvatarInfoList>();
         [JsonProperty("ttl")]
-        public int ttl;
+        public long ttl;
     }
 }

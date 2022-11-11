@@ -2,6 +2,9 @@
 Discord Bot/bin/Debug/netcoreapp3.1/config.json
 Discord Bot/bin/Release/netcoreapp3.1/config.json
 
+Discord Bot/bin/Debug/netcoreapp3.1/img_cache/*
+Discord Bot/bin/Release/netcoreapp3.1/img_cache/*
+
 Discord Bot/bin/Debug/netcoreapp3.1/ascension_materials/*
 Discord Bot/bin/Debug/netcoreapp3.1/NSFW/*
 Discord Bot/bin/Release/netcoreapp3.1/ascension_materials/*

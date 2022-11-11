@@ -10,8 +10,6 @@ namespace DiscordBot.Services
 {
     public class GenshinDataHandler
     {
-        public const string REQUEST_IMG_URL = "https://enka.network/ui/";
-
         public const string GENSHIN_JSON_DATA_PATH = "genshinData.json";
         public const string GENSHIN_MATERIALS_DATA_PATH = "ascension_materials";
 

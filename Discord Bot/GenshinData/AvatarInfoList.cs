@@ -17,6 +17,6 @@ namespace DiscordBot.GenshinData
         [JsonProperty("propMap")]
         public PropMap propMap;
         [JsonProperty("equipList")]
-        public EquipList equipList;
+        public List<EquipList> equipList = new List<EquipList>();
     }
 }
