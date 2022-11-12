@@ -4,6 +4,9 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DiscordBot.Services;
 using System;
+using static DiscordBot.GenshinData.Values.Enums;
+using DiscordBot.GenshinData;
+using System.Collections.Generic;
 
 namespace DiscordBot
 {
@@ -39,27 +42,22 @@ namespace DiscordBot
 
             var streamNamecard = namecardsHandler.DownloadImage(picPath);
             var builderNamecard = new DiscordMessageBuilder();
-            builderNamecard.WithFile(streamNamecard);
 
-            string characterIconName = character.sideIconName.Remove(13, 5);
-            Console.WriteLine(characterIconName);
+            string characterIconName = character.sideIconName.Remove(13, 5); //split to get not sided img but front view
 
             var streamAvatar = namecardsHandler.DownloadImage(characterIconName);
             var builderAvatar = new DiscordMessageBuilder();
+            var buttonDetails = new DiscordLinkButtonComponent($"https://enka.network/u/{uid}", "Detailed Info about party");
+
+            string content = $"```arm\nName: {userData.playerInfo.nickname} [AR: {userData.playerInfo.level}] \nSignature: {userData.playerInfo.signature} \nAbyss: {userData.playerInfo.towerFloorIndex}-{userData.playerInfo.towerLevelIndex} | Achievements done: {userData.playerInfo.finishAchievementNum} | World Lvl: {userData.playerInfo.worldLevel}\n```";
             builderAvatar.WithFile(streamAvatar);
+            builderAvatar.AddComponents(buttonDetails);
+
+            builderNamecard.WithFile(streamNamecard);
+            builderNamecard.WithContent(content);
 
             await ctx.Channel.SendMessageAsync(builderAvatar);
-            await ctx.Channel.SendMessageAsync($"```arm\nName: {userData.playerInfo.nickname} [AR: {userData.playerInfo.level}] \nSignature: {userData.playerInfo.signature} \nStuck at Abyss: {userData.playerInfo.towerFloorIndex}-{userData.playerInfo.towerLevelIndex} | Achievements done: {userData.playerInfo.finishAchievementNum} | World Lvl: {userData.playerInfo.worldLevel}\n```");
             await ctx.Channel.SendMessageAsync(builderNamecard);
-
-            //webClient.DownloadFile($"{RequestImgPath}{userData.playerInfo.n}{PNG_PATH});
-        }
-
-        [Command("enroll")]
-        [Description("Enrolling in weekly FREE Welkin, all you need is to put UID, 1 UID per user and 1 Welkin per week. It is officially supported by Razer Gold. More: https://github.com/dentalmisorder/discordbot")]
-        public async Task Enroll(CommandContext ctx, int uid)
-        {
-            //TODO: set UID in .json with all UIDs
         }
 
         [Command("materials")]
