@@ -38,6 +38,8 @@ namespace DiscordBot.Services
 
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
+            bool isAlreadyEnrolled = false;
+
             if (recruitsCached?.Count >= 1)
             {
                 foreach (var recruit in recruitsCached)
@@ -47,13 +49,14 @@ namespace DiscordBot.Services
                     var builderError = new DiscordMessageBuilder();
                     var buttonLink = new DiscordLinkButtonComponent(DOCUMENTATION_URL, "More about Eremites Recruit System");
 
+                    isAlreadyEnrolled = true;
                     builderError.WithContent($"You already enrolled for Eremites Recruit System this week with UID: {uid}\nThanks for helping with our commisions across Sumeru!");
                     builderError.AddComponents(buttonLink);
                     await ctx.Member.SendMessageAsync(builderError).ConfigureAwait(false);
-                    await Task.CompletedTask;
-                    return;
                 }
             }
+
+            if (isAlreadyEnrolled) return;
 
             EremiteRecruit eremite = new EremiteRecruit(ctx.Client.CurrentUser.Id, uid);
             recruitsCached.Add(eremite);
