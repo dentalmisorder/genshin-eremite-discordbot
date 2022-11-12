@@ -4,14 +4,21 @@ using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using DiscordBot.Services;
 
 namespace DiscordBot
 {
     class UtilityCommands : BaseCommandModule
     {
-        public const string NSFW_FOLDER = "NSFW";
+        private DiscordDataHandler discordDataHandler = null;
 
+        public const string NSFW_FOLDER = "NSFW";
         public const string NSFW_ROLE = "Cherry";
+
+        private void Initialize()
+        {
+            discordDataHandler = ServicesProvider.Instance.DiscordDataHandler;
+        }
 
         [Command("nsfw")]
         [Description("Channel must be switched to restricted (marked as NSFW) before this command. Randomly gives genshin-related nsfw media (18+)")]
@@ -29,6 +36,15 @@ namespace DiscordBot
             builder.WithFile(stream);
 
             await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
+        }
+
+        [Command("travel")]
+        [Description("Travel across regionns with Eremites and recruits, help them do commisions and get the chance to obtain rare rewards!")]
+        public async Task Travel(CommandContext ctx)
+        {
+            if (discordDataHandler == null) Initialize();
+
+            discordDataHandler.Travel(ctx);
         }
 
         //You can use roles to define who can use commands, as example:

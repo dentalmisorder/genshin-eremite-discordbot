@@ -6,14 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Discord Bot/1.0.0": {
+      "DiscordBot/1.0.0": {
         "dependencies": {
           "DSharpPlus": "4.2.0",
           "DSharpPlus.CommandsNext": "4.2.0",
           "DSharpPlus.Interactivity": "4.2.0"
         },
         "runtime": {
-          "Discord Bot.dll": {}
+          "DiscordBot.dll": {}
         }
       },
       "ConcurrentHashSet/1.1.0": {
@@ -730,7 +730,7 @@
     }
   },
   "libraries": {
-    "Discord Bot/1.0.0": {
+    "DiscordBot/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

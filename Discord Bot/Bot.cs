@@ -21,12 +21,6 @@ namespace DiscordBot
         protected JsonConfig jsonConfig;
         protected DiscordConfiguration discordConfig;
         protected CommandsNextConfiguration commandsConfig;
-        protected ServicesProvider servicesProvider;
-
-        public void SetupServices(ServicesProvider provider)
-        {
-            servicesProvider = provider;
-        }
 
         public async Task RunAsync()
         {

@@ -21,7 +21,7 @@ namespace DiscordBot.Services
 
         public string fullPath;
 
-        public void Initialize()
+        public NamecardsHandler()
         {
             string fullPathNamecards = Path.Combine(Directory.GetCurrentDirectory(), NAMECARDS_JSON_FOLDER, NAMECARDS_JSON_DATA);
             string fullPathCharacters = Path.Combine(Directory.GetCurrentDirectory(), NAMECARDS_JSON_FOLDER, CHARACTERS_JSON_DATA);

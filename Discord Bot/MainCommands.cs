@@ -3,27 +3,21 @@ using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DiscordBot.Services;
-using System;
-using static DiscordBot.GenshinData.Values.Enums;
-using DiscordBot.GenshinData;
-using System.Collections.Generic;
 
 namespace DiscordBot
 {
     class MainCommands : BaseCommandModule
     {
         private NamecardsHandler namecardsHandler = null;
-        private GenshinDataHandler genshinDataHandler = null;
         private EremiteRecruitSystem eremiteRecruitSystem = null;
 
         public const string PNG_PATH = ".png";
 
-        public void Initialize()
+        private void Initialize()
         {
-            var provider = new ServicesProvider();
+            var provider = ServicesProvider.Instance;
 
             namecardsHandler = provider.NamecardsHandler;
-            genshinDataHandler = provider.GenshinDataHandler;
             eremiteRecruitSystem = provider.EremiteRecruitSystem;
         }
 
@@ -90,7 +84,11 @@ namespace DiscordBot
         public async Task GetAscensionMaterials(CommandContext ctx, string characterName, string characterSurname)
         {
             var stream = GenshinDataHandler.GetMaterialsCard(characterName, characterSurname);
-            if (stream == null) await Task.CompletedTask;
+            if (stream == null)
+            {
+                await Task.CompletedTask;
+                return;
+            }
 
             var builder = new DiscordMessageBuilder();
 

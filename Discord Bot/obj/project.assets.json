@@ -4301,9 +4301,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Unity\\Projects\\Discord Bot\\Discord Bot\\Discord Bot.csproj",
-      "projectName": "Discord Bot",
-      "projectPath": "D:\\Unity\\Projects\\Discord Bot\\Discord Bot\\Discord Bot.csproj",
+      "projectUniqueName": "D:\\Unity\\Projects\\Discord Bot\\Discord Bot\\DiscordBot.csproj",
+      "projectName": "DiscordBot",
+      "projectPath": "D:\\Unity\\Projects\\Discord Bot\\Discord Bot\\DiscordBot.csproj",
       "packagesPath": "C:\\Users\\Denys\\.nuget\\packages\\",
       "outputPath": "D:\\Unity\\Projects\\Discord Bot\\Discord Bot\\obj\\",
       "projectStyle": "PackageReference",

@@ -10,13 +10,14 @@ namespace DiscordBot
     {
         static void Main(string[] args)
         {
+            new ServicesProvider();
+
             Init();
         }
 
         public static void Init()
         {
             var bot = new Bot();
-            bot.SetupServices(new ServicesProvider());
 
             var task = bot.RunAsync();
 
