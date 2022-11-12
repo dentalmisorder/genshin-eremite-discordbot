@@ -58,8 +58,8 @@ namespace DiscordBot
             builderNamecard.WithFile(streamNamecard);
             builderNamecard.WithContent(content);
 
-            await ctx.Channel.SendMessageAsync(builderAvatar);
-            await ctx.Channel.SendMessageAsync(builderNamecard);
+            await ctx.Channel.SendMessageAsync(builderAvatar).ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync(builderNamecard).ConfigureAwait(false);
         }
 
         [Command("enroll")]
@@ -69,7 +69,7 @@ namespace DiscordBot
             if (eremiteRecruitSystem == null) Initialize();
 
             //TODO: set UID in .json with all UIDs
-            await eremiteRecruitSystem.Enroll(ctx, uid);
+            await eremiteRecruitSystem.Enroll(ctx, uid).ConfigureAwait(false);
         }
 
         [Command("materials")]

@@ -49,7 +49,8 @@ namespace DiscordBot.Services
 
                     builderError.WithContent($"You already enrolled for Eremites Recruit System this week with UID: {uid}\nThanks for helping with our commisions across Sumeru!");
                     builderError.AddComponents(buttonLink);
-                    await ctx.Member.SendMessageAsync(builderError);
+                    await ctx.Member.SendMessageAsync(builderError).ConfigureAwait(false);
+                    await Task.CompletedTask;
                     return;
                 }
             }
@@ -64,7 +65,7 @@ namespace DiscordBot.Services
 
             builderSuccess.WithContent($"You have successfully enrolled for Eremites Recruit System this week with UID: {uid}\nThanks for helping with our commisions! Travel across Sumeru to obtain rare rewards.");
             builderSuccess.AddComponents(buttonAbout);
-            await ctx.Member.SendMessageAsync(builderSuccess);
+            await ctx.Member.SendMessageAsync(builderSuccess).ConfigureAwait(false);
         }
     }
 }

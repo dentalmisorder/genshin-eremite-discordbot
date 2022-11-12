@@ -1,4 +1,8 @@
 ﻿using DiscordBot.Services;
+using DSharpPlus;
+using DSharpPlus.EventArgs;
+using System;
+using System.Threading.Tasks;
 
 namespace DiscordBot
 {

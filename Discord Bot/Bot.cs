@@ -6,6 +6,7 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.CommandsNext;
 using Newtonsoft.Json;
 using DiscordBot.Services;
+using System;
 
 namespace DiscordBot
 {
@@ -30,14 +31,14 @@ namespace DiscordBot
         public async Task RunAsync()
         {
             //Reading JSON config file (config.json) for our token
-            await ReadJsonConfig();
+            ReadJsonConfig();
 
             discordConfig = SetupDiscordConfig();
 
             Client = new DiscordClient(discordConfig);
-            Client.Ready += OnBotWokeUp;
             Client.SocketErrored += OnSocketError;
             Client.ClientErrored += OnClientError;
+            Client.Zombied += Zombied;
 
             commandsConfig = SetupCommandsConfig();
 
@@ -46,23 +47,18 @@ namespace DiscordBot
             Commands.RegisterCommands<MainCommands>();
             Commands.RegisterCommands<UtilityCommands>();
 
-            await Client.ConnectAsync();
+            await Client.ConnectAsync().ConfigureAwait(false);
 
             //If bot quits early, we basically waiting forever so bot doesnt get down after a second
             await Task.Delay(-1);
+
+            Reinit(Client);
         }
 
-        private async Task ReadJsonConfig()
-        {
-            var json = string.Empty;
 
-            using (var fs = File.OpenRead("config.json"))
-            {
-                using (var sr = new StreamReader(fs, new UTF8Encoding(false)))
-                {
-                    json = await sr.ReadToEndAsync().ConfigureAwait(false);
-                }
-            }
+        private void ReadJsonConfig()
+        {
+            string json = File.ReadAllText("config.json");
 
             jsonConfig = JsonConvert.DeserializeObject<JsonConfig>(json);
         }
@@ -83,7 +79,7 @@ namespace DiscordBot
             var commands = new CommandsNextConfiguration();
             commands.StringPrefixes = new string[] { jsonConfig.Prefix };
             commands.EnableMentionPrefix = true;
-            commands.EnableDms = true;
+            commands.EnableDms = false;
             commands.DmHelp = true;
             commands.EnableMentionPrefix = true;
 
@@ -92,23 +88,34 @@ namespace DiscordBot
 
         private Task OnClientError(DiscordClient sender, ClientErrorEventArgs e)
         {
-            if (e.Handled) return Task.CompletedTask;
+            Console.WriteLine("OnClientError...");
+            Reinit(sender);
 
-            Program.Init();
+            return Task.CompletedTask;
+        }
+
+        private Task Zombied(DiscordClient sender, ZombiedEventArgs e)
+        {
+            Console.WriteLine("Zombied....");
+            Reinit(sender);
+
             return Task.CompletedTask;
         }
 
         private Task OnSocketError(DiscordClient sender, SocketErrorEventArgs e)
         {
-            if (e.Handled) return Task.CompletedTask;
+            Console.WriteLine("OnSocketError...");
+            Reinit(sender);
 
-            Program.Init();
             return Task.CompletedTask;
         }
 
-        private Task OnBotWokeUp(DiscordClient client, ReadyEventArgs args)
+        private async Task Reinit(DiscordClient client)
         {
-            return Task.CompletedTask;
+            await client.DisconnectAsync();
+
+            Console.WriteLine("Reinit, disconnecting client, re-initing..");
+            Program.Init();
         }
     }
 }
