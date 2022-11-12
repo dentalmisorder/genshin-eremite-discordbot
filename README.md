@@ -10,7 +10,10 @@ It is made just for fun, you can modify literally anything, im gonna develop the
 
 > [My server (if u need help)](https://discord.gg/4wTnnTbPgz)
 
-![Here should have been a screenshot, guess hosting died](https://i.ibb.co/HYxY9h4/Screenshot-2.png "screenshot (WIP)")
+![Here should have been a screenshot, guess hosting died](https://user-images.githubusercontent.com/62771181/201447945-119ee372-2286-4d72-a1a6-f5447d9e83e2.png)
+![Here should have been a screenshot, guess hosting died](https://user-images.githubusercontent.com/62771181/201447819-9df0f262-ac71-4151-acf2-dc66133cbf35.png)
+![Here should have been a screenshot, guess hosting died](https://user-images.githubusercontent.com/62771181/201447868-064df60f-e7a2-4e52-83c7-ff361a764565.png)
+
 
 # Credits
 
