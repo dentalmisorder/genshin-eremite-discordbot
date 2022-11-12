@@ -14,6 +14,7 @@ namespace DiscordBot
     {
         private NamecardsHandler namecardsHandler = null;
         private GenshinDataHandler genshinDataHandler = null;
+        private EremiteRecruitSystem eremiteRecruitSystem = null;
 
         public const string PNG_PATH = ".png";
 
@@ -23,6 +24,7 @@ namespace DiscordBot
 
             namecardsHandler = provider.NamecardsHandler;
             genshinDataHandler = provider.GenshinDataHandler;
+            eremiteRecruitSystem = provider.EremiteRecruitSystem;
         }
 
         [Command("stats")]
@@ -58,6 +60,16 @@ namespace DiscordBot
 
             await ctx.Channel.SendMessageAsync(builderAvatar);
             await ctx.Channel.SendMessageAsync(builderNamecard);
+        }
+
+        [Command("enroll")]
+        [Description("Enrolling in weekly FREE Welkin, all you need is to put UID, 1 UID per user and 1 Welkin per week. It is officially supported by Razer Gold. More: https://github.com/dentalmisorder/discordbot")]
+        public async Task Enroll(CommandContext ctx, int uid)
+        {
+            if (eremiteRecruitSystem == null) Initialize();
+
+            //TODO: set UID in .json with all UIDs
+            await eremiteRecruitSystem.Enroll(ctx, uid);
         }
 
         [Command("materials")]
