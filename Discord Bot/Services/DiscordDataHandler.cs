@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using DiscordBot.DiscordData;
 using DSharpPlus.CommandsNext;
@@ -23,18 +24,20 @@ namespace DiscordBot.Services
         private float fiveStarChance = 0.05f;
         private float tenStarChance = 0.005f;
 
+        private string starSign = "☆";
+
         public const int PULL_COST = 160;
         public const string USERS_DATABASE_JSON = "usersDatabase.json";
         public const string CHARACTER_FOLDER = "characters";
         public const string AKASHA_BANNERS_FOLDER = "akasha_banners";
         public const string CHARACTERS_DATABASE_JSON = "charactersDatabase.json";
         public const string DEFAULT_ICON_EREMITE_ID = "nochar.png";
-        public const string TRAVEL_FOLDER = "travel_sumeru";
+        public const string TRAVEL_FOLDER = "travel";
         public const string IMAGE_BASE = "banner_travel_";
 
         public DiscordDataHandler()
         {
-            string fullPathDatabase = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, USERS_DATABASE_JSON);
+            string fullPathDatabase = Path.Combine(Directory.GetCurrentDirectory(), USERS_DATABASE_JSON);
             string fullPathCharacters = Path.Combine(Directory.GetCurrentDirectory(), CHARACTER_FOLDER, CHARACTERS_DATABASE_JSON);
             AutoSave().ConfigureAwait(false);
 
@@ -61,7 +64,7 @@ namespace DiscordBot.Services
             while(isAutoSaveOn)
             {
                 await Task.Delay(new TimeSpan(0, minutesAutoSave, 0));
-                await SaveUsersData().ConfigureAwait(false);
+                await SaveUsersData();
             }
         }
 
@@ -71,9 +74,9 @@ namespace DiscordBot.Services
 
             string json = string.Empty;
             json = JsonConvert.SerializeObject(usersData, Formatting.Indented);
-            await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, USERS_DATABASE_JSON), json).ConfigureAwait(false);
 
             Console.WriteLine($"\n[Discord Data Handler] Saving users data...\n");
+            await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), USERS_DATABASE_JSON), json);
         }
 
         public void RegisterNewUserIfNeeded(CommandContext ctx, ref UserData user)
@@ -138,8 +141,14 @@ namespace DiscordBot.Services
             var iconPath = equippedChar == null ? Path.Combine(folder, DEFAULT_ICON_EREMITE_ID) : Path.Combine(folder, $"{user.currentEquippedCharacter.imageAkashaBannerPath}");
 
             string currentChar = equippedChar == null ? "None, use !pull to get one :)" : equippedChar.characterName;
+            string charactersInInventory = string.Empty;
+
+            foreach (var character in user.characters)
+            {
+                charactersInInventory = $"{charactersInInventory} {character.characterName}<{character.starsRarity}{starSign}> ";
+            }
             string characterBuff = equippedChar == null ? "None, use !setcharacter [name] or !pull to get one :)" : equippedChar.perkInfo;
-            string eremiteID = $"```elm\n[{ctx.Member.DisplayName}]\nMain Character: {currentChar}\nCharacter Buff: {characterBuff}\n\nEnrolled for Eremites Recruit System: {user.timesEremitesRecruitSystemEnrolled} | Welkin Moon won: {user.timesWelkinWon}\nMora: {user.wallet.mora} | Primos: {user.wallet.primogems}\n```";
+            string eremiteID = $"```elm\n[{ctx.Member.DisplayName}]\nMain Character: {currentChar}\nCharacter Buff: {characterBuff}\n\nEnrolled for Eremites Recruit System: {user.timesEremitesRecruitSystemEnrolled} | Welkin Moon won: {user.timesWelkinWon}\nCharacters Obtained: {charactersInInventory}\nMora: {user.wallet.mora} | Primos: {user.wallet.primogems}\n```";
 
             var builder = new DiscordMessageBuilder();
 
@@ -156,6 +165,7 @@ namespace DiscordBot.Services
             float starsChance = (float)rnd.NextDouble();
             List<Character> charactersFromWhoToRoll = new List<Character>();
 
+            //CRINGE CONSTRUCTION! TODO: refactor but not at 3 AM pls bro i beg u spend some time
             if(starsChance <= tenStarChance)
             {
                 charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 10);
@@ -178,14 +188,17 @@ namespace DiscordBot.Services
 
             var builder = new DiscordMessageBuilder();
             builder.WithFile(File.OpenRead(pathToBannerImg));
-            builder.WithContent($"```\n{ctx.Member.DisplayName} pulled a {characterPulled.characterName} <{characterPulled.starsRarity}☆> ! Congrats!\n```");
+            builder.WithContent($"```\n{ctx.Member.DisplayName} pulled a {characterPulled.characterName} <{characterPulled.starsRarity}{starSign}> ! Congrats!\n```");
 
             await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
-            if(!user.characters.Contains(characterPulled) && characterPulled.starsRarity < 10) user.characters.Add(characterPulled);
+            if(!user.characters.Contains(characterPulled) || characterPulled.starsRarity >= 10) user.characters.Add(characterPulled);
         }
 
         public UserData GetUser(ulong userSnowflakeId) => usersData.Find(data => data.userId == userSnowflakeId);
 
+        /// <summary>
+        /// Also cringe construction, TODO: refactor
+        /// </summary>
         private string SetupTravelImage(int moraFound, int primogemsFound)
         {
             string imgToSet = string.Empty;
