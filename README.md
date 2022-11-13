@@ -1,20 +1,16 @@
 # C# Discord Bot (Made on DSharpPlus)
 
-It is made just for fun, you can modify literally anything, im gonna develop the bot so feel free to fork and make any changes. You can use this bot as a blueprint, im trying my best to comment stuff that people might not understand but if ur stuck - feel free to DM me or ask on the server (links down below). [dental misorder#8577]
-
-[NOTE: Do NOT forget to change token in config.json, also do NOT show your token to anyone, otherwise - go generate another one at discord.com/developers]
-
-> [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=739487241469952000&permissions=8&scope=bot)
-
 > [Commands](https://docs.google.com/document/d/1kO8hHnboGeMsSsdFOT-LwKPUa2rxmlWIGya-gj65amg/edit?usp=sharing)
 
-> [My server (if u need help)](https://discord.gg/4wTnnTbPgz)
+> [Eremite Wiki](/https://github.com/dentalmisorder/discordbot/wiki)
 
-![Here should have been a screenshot, guess hosting died](https://user-images.githubusercontent.com/62771181/201447945-119ee372-2286-4d72-a1a6-f5447d9e83e2.png)
-![Here should have been a screenshot, guess hosting died](https://user-images.githubusercontent.com/62771181/201447819-9df0f262-ac71-4151-acf2-dc66133cbf35.png)
-![Here should have been a screenshot, guess hosting died](https://user-images.githubusercontent.com/62771181/201447868-064df60f-e7a2-4e52-83c7-ff361a764565.png)
+> She is the only one current bot on Discord that gives you Welkin Moon for participating in events or as a gift for Enrollment system. Basically, be active - earn real money value game-content. Yes, it is completely FREE, and NO, its NOT bannable (payments thru Razer Gold, official Genshin Impact partners). [NOTE: !enroll is reset every week so you have a chance every week, it is all clear and transparent, we use EremiteRecruitSystem.GetRandomWinner() method to get winner.
 
+***
+<a href="https://docs.google.com/document/d/1kO8hHnboGeMsSsdFOT-LwKPUa2rxmlWIGya-gj65amg/edit#heading=h.71uvhmg6cluw"><img src=https://i.ibb.co/Tq37xNv/home-container-Eremite-eremites-recruit-system-banner-eremite-recruit-system.png></img></a>
 
 # Credits
+
+> [Invite Bot](https://discord.com/api/oauth2/authorize?client_id=739487241469952000&permissions=8&scope=bot)
 
 > Thanks to [Enka.Network](https://github.com/EnkaNetwork) for [API](https://github.com/EnkaNetwork/API-docs) provided, and [DevilTakoyaki](https://twitter.com/deviltakoyaki) for materials provided.
