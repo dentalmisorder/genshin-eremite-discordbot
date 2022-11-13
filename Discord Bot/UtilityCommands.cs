@@ -47,6 +47,14 @@ namespace DiscordBot
             discordDataHandler.Travel(ctx);
         }
 
+        [Command("akashaprofile")]
+        public async Task AkashaProfile(CommandContext ctx)
+        {
+            if (discordDataHandler == null) Initialize();
+
+            discordDataHandler.ShowAkashaProfile(ctx);
+        }
+
         //You can use roles to define who can use commands, as example:
         //[RequireRoles(RoleCheckMode.Any, NSFW_ROLE, "Administrator")]
     }

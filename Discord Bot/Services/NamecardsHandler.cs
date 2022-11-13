@@ -62,17 +62,17 @@ namespace DiscordBot.Services
             return settings;
         }
 
-        public FileStream DownloadCardImage(NamecardSettings settings)
+        public static FileStream DownloadCardImage(NamecardSettings settings)
         {
             return DownloadImage(settings.picPath[0]);
         }
 
-        public FileStream DownloadAvatarImage(NamecardSettings settings)
+        public static FileStream DownloadAvatarImage(NamecardSettings settings)
         {
             return DownloadImage(settings.icon);
         }
 
-        public FileStream DownloadImage(string picturePath)
+        public static FileStream DownloadImage(string picturePath)
         {
             string fullPath = $"{REQUEST_IMG_URL}{picturePath}.png";
             string folderPath = Path.Combine(Directory.GetCurrentDirectory(), IMG_CACHE_FOLDER);

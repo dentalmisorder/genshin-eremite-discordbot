@@ -24,3 +24,4 @@ D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\DiscordBot.csp
 D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\DiscordBot.dll
 D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\DiscordBot.pdb
 D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\DiscordBot.genruntimeconfig.cache
+D:\Unity\Projects\Discord Bot\Discord Bot\obj\Debug\netcoreapp3.1\DiscordBot.csproj.AssemblyReference.cache

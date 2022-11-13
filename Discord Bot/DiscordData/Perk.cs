@@ -1,0 +1,14 @@
+﻿namespace DiscordBot.DiscordData
+{
+    public enum Perk
+    {
+        DOUBLE_MORA_LOWER_PRIMOS,
+        DOUBLE_MORA,
+        DOUBLE_PRIMOS_LOWER_MORA,
+        DOUBLE_PRIMOS,
+        DOUBLE_TRAVEL,
+        TWICE_TRAVEL_BOUNTY,
+        WELKIN_EREMITE_RECRUIT_ID_WRITE_TWICE,
+        WELKIN_EREMITE_RECRUIT_ID_WRITE_TRIPLE_NO_PRIMOS
+    }
+}

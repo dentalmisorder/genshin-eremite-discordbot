@@ -11,21 +11,22 @@ namespace DiscordBot.Services
 {
     public class DiscordDataHandler
     {
-        public List<UserData> usersData = new List<UserData>();
+        private List<UserData> usersData = new List<UserData>();
+        private bool isAutoSaveOn = true;
 
-        public bool isAutoSaveOn = true;
+        private int maxMoraObtainedByTraveling = 500;
+        private int maxPrimosObtainedByTraveling = 60;
+        private int minutesAutoSave = 10;
 
-        public int maxMoraObtainedByTraveling = 500;
-        public int maxPrimosObtainedByTraveling = 60;
 
         public const string USERS_DATABASE_JSON = "usersDatabase.json";
-        public const string FOLDER = "travel_sumeru";
+        public const string DEFAULT_ICON_EREMITE_ID = "img_characters/nochar.png";
+        public const string TRAVEL_FOLDER = "travel_sumeru";
         public const string IMAGE_BASE = "banner_travel_";
-        public const int minutesAutoSave = 10;
 
         public DiscordDataHandler()
         {
-            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), FOLDER, USERS_DATABASE_JSON);
+            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, USERS_DATABASE_JSON);
             AutoSave().ConfigureAwait(false);
 
             if (!File.Exists(fullPath)) return;
@@ -54,12 +55,11 @@ namespace DiscordBot.Services
             Console.WriteLine($"\n[Discord Data Handler] Saving users data...\n");
 
             string json = JsonConvert.SerializeObject(usersData);
-            await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), FOLDER, USERS_DATABASE_JSON), json);
+            await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, USERS_DATABASE_JSON), json);
         }
 
         public void Travel(CommandContext ctx)
         {
-            Console.WriteLine($"{usersData.Count}, {usersData.ToString()}");
             UserData user = usersData.Find(data => data.userId == ctx.User.Id);
 
             bool isNewUser = user == null;
@@ -67,6 +67,7 @@ namespace DiscordBot.Services
             {
                 user = new UserData();
                 user.userId = ctx.User.Id;
+                usersData.Add(user);
             }
 
             if (DateTime.Compare(user.timeLastTravel.AddDays(1).ToUniversalTime(), DateTime.Now.ToUniversalTime()) == 1)
@@ -83,14 +84,13 @@ namespace DiscordBot.Services
             user.wallet.primogems += primogemsFound;
             user.timeLastTravel = DateTime.Now;
 
-            if (isNewUser) usersData.Add(user);
             //save if it was just created user to our list of users
             //it will save it automatically if auto-save is On
 
 
             string imgToSet = SetupTravelImage(moraFound, primogemsFound);
 
-            string path = Path.Combine(Directory.GetCurrentDirectory(), FOLDER, $"{IMAGE_BASE}{imgToSet}.png");
+            string path = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, $"{IMAGE_BASE}{imgToSet}.png");
             var stream = File.OpenRead(path);
 
             var builder = new DiscordMessageBuilder();
@@ -98,6 +98,33 @@ namespace DiscordBot.Services
             string content = $"```elm\n {ctx.User.Username} came back after traveling across desert with \n|{moraFound}| Mora\n|{primogemsFound}| Primogems.\n```";
             builder.WithContent(content);
             builder.WithFile(stream);
+
+            ctx.Channel.SendMessageAsync(builder);
+        }
+
+        public void ShowAkashaProfile(CommandContext ctx)
+        {
+            UserData user = usersData.Find(data => data.userId == ctx.User.Id);
+
+            bool isNewUser = user == null;
+            if (isNewUser)
+            {
+                user = new UserData();
+                user.userId = ctx.User.Id;
+                usersData.Add(user);
+            }
+
+            var equippedChar = user.currentEquippedCharacter;
+            var iconPath = equippedChar == null ? DEFAULT_ICON_EREMITE_ID : Path.Combine(Directory.GetCurrentDirectory(), user.currentEquippedCharacter.imageIconPath);
+
+            string currentChar = equippedChar == null ? "None, use !pull to get one :)" : equippedChar.characterName;
+            string characterBuff = equippedChar == null ? "None, use !setcharacter [name] or !pull to get one :)" : equippedChar.perkInfo;
+            string eremiteID = $"```elm\n[{ctx.Member.DisplayName}]\nMain Character: {currentChar}\nCharacter Buff: {characterBuff}\n\nEnrolled for Eremites Recruit System: {user.timesEremitesRecruitSystemEnrolled} | Welkin Moon won: {user.timesWelkinWon}\nMora: {user.wallet.mora} | Primos: {user.wallet.primogems}\n```";
+
+            var builder = new DiscordMessageBuilder();
+
+            builder.WithFile(File.OpenRead(iconPath));
+            builder.WithContent(eremiteID);
 
             ctx.Channel.SendMessageAsync(builder);
         }

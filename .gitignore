@@ -1,15 +1,12 @@
 .vs/*
 Discord Bot/bin/Debug/netcoreapp3.1/config.json
-Discord Bot/bin/Release/netcoreapp3.1/config.json
 
 Discord Bot/bin/Debug/netcoreapp3.1/img_cache/*
-Discord Bot/bin/Release/netcoreapp3.1/img_cache/*
 
 Discord Bot/bin/Debug/netcoreapp3.1/ascension_materials/*
 Discord Bot/bin/Debug/netcoreapp3.1/NSFW/*
-Discord Bot/bin/Release/netcoreapp3.1/ascension_materials/*
-Discord Bot/bin/Release/netcoreapp3.1/NSFW/*
 Discord Bot/bin/Debug/netcoreapp3.1/genshinData.json
 Discord Bot/bin/Debug/netcoreapp3.1/eremites_recruit_system/eremites_recruits.json
 Discord Bot/bin/Debug/netcoreapp3.1/eremites_recruit_system/*
 Discord Bot/bin/Debug/netcoreapp3.1/travel_sumeru/usersDatabase.json
+Discord Bot/bin/Debug/netcoreapp3.1/img_characters/nochar_template.png

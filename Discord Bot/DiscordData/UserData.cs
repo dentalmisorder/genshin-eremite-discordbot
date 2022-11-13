@@ -1,6 +1,7 @@
 ﻿
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace DiscordBot.DiscordData
 {
@@ -9,8 +10,17 @@ namespace DiscordBot.DiscordData
         [JsonProperty("userId")]
         public ulong userId; //snowflake id  prob
 
+        [JsonProperty("currentEquippedCharacter")]
+        public Character currentEquippedCharacter = null;
+
         [JsonProperty("wallet")]
-        public DiscordWallet wallet = new DiscordWallet();
+        public DiscordWallet wallet = new DiscordWallet(); //users money
+
+        [JsonProperty("characters")]
+        public List<Character> characters = new List<Character>(); //users inventory
+
+        [JsonProperty("badges")]
+        public List<Badge> badges = new List<Badge>(); //player badges for future mini-games/etc.
 
         [JsonProperty("recruitSystemEnrolled")]
         public int timesEremitesRecruitSystemEnrolled = 0;

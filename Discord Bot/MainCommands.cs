@@ -36,12 +36,12 @@ namespace DiscordBot
             string picPath = namecard.picPath[0];
             if (picPath == string.Empty || picPath == null) picPath = namecard.picPath[1];
 
-            var streamNamecard = namecardsHandler.DownloadImage(picPath);
+            var streamNamecard = NamecardsHandler.DownloadImage(picPath);
             var builderNamecard = new DiscordMessageBuilder();
 
             string characterIconName = character.sideIconName.Remove(13, 5); //split to get not sided img but front view
 
-            var streamAvatar = namecardsHandler.DownloadImage(characterIconName);
+            var streamAvatar = NamecardsHandler.DownloadImage(characterIconName);
             var builderAvatar = new DiscordMessageBuilder();
             var buttonDetails = new DiscordLinkButtonComponent($"https://enka.network/u/{uid}", "Detailed Info about party");
 
