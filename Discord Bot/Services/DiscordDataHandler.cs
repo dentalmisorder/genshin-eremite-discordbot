@@ -182,8 +182,6 @@ namespace DiscordBot.Services
 
             await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
             if(!user.characters.Contains(characterPulled) && characterPulled.starsRarity < 10) user.characters.Add(characterPulled);
-
-            await SaveUsersData().ConfigureAwait(false);
         }
 
         public UserData GetUser(ulong userSnowflakeId) => usersData.Find(data => data.userId == userSnowflakeId);
