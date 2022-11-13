@@ -12,56 +12,72 @@ namespace DiscordBot.Services
     public class DiscordDataHandler
     {
         private List<UserData> usersData = new List<UserData>();
+        private List<Character> charactersData = new List<Character>();
         private bool isAutoSaveOn = true;
 
-        private int maxMoraObtainedByTraveling = 500;
-        private int maxPrimosObtainedByTraveling = 60;
-        private int minutesAutoSave = 10;
+        private int maxMoraObtainedByTraveling = 100;
+        private int maxPrimosObtainedByTraveling = 40;
+        private int minutesAutoSave = 5;
 
+        private float fourStarChance = 0.40f;
+        private float fiveStarChance = 0.05f;
+        private float tenStarChance = 0.005f;
 
+        public const int PULL_COST = 160;
         public const string USERS_DATABASE_JSON = "usersDatabase.json";
-        public const string DEFAULT_ICON_EREMITE_ID = "img_characters/nochar.png";
+        public const string CHARACTER_FOLDER = "characters";
+        public const string AKASHA_BANNERS_FOLDER = "akasha_banners";
+        public const string CHARACTERS_DATABASE_JSON = "charactersDatabase.json";
+        public const string DEFAULT_ICON_EREMITE_ID = "nochar.png";
         public const string TRAVEL_FOLDER = "travel_sumeru";
         public const string IMAGE_BASE = "banner_travel_";
 
         public DiscordDataHandler()
         {
-            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, USERS_DATABASE_JSON);
+            string fullPathDatabase = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, USERS_DATABASE_JSON);
+            string fullPathCharacters = Path.Combine(Directory.GetCurrentDirectory(), CHARACTER_FOLDER, CHARACTERS_DATABASE_JSON);
             AutoSave().ConfigureAwait(false);
 
-            if (!File.Exists(fullPath)) return;
-
-            CacheUsers(fullPath).ConfigureAwait(false);
+            CacheUsersAndCharacters(fullPathDatabase, fullPathCharacters);
         }
 
-        private async Task CacheUsers(string fullPath)
+        private void CacheUsersAndCharacters(string pathDatabase, string pathCharacters)
         {
-            string usersDataJson = await File.ReadAllTextAsync(fullPath);
+            string charactersDataJson = File.ReadAllText(pathCharacters);
 
+            //pre-load all Characters avaliable so we dont need to parse Json each time, we just take it and work with it
+            charactersData = JsonConvert.DeserializeObject<List<Character>>(charactersDataJson);
+
+            if (!File.Exists(pathDatabase)) return;
+            string usersDataJson = File.ReadAllText(pathDatabase);
+
+            //pre-load all UserData about discord mora,primos,etc. so we dont need to parse Json each time, we just take it and work with it
             usersData = JsonConvert.DeserializeObject<List<UserData>>(usersDataJson);
         }
 
         private async Task AutoSave()
         {
+            
             while(isAutoSaveOn)
             {
                 await Task.Delay(new TimeSpan(0, minutesAutoSave, 0));
-                await SaveUsersData();
+                await SaveUsersData().ConfigureAwait(false);
             }
         }
 
         private async Task SaveUsersData()
         {
-            Console.WriteLine($"\n[Discord Data Handler] Saving users data...\n");
+            if (usersData.Count <= 0) return;
 
-            string json = JsonConvert.SerializeObject(usersData);
-            await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, USERS_DATABASE_JSON), json);
+            string json = string.Empty;
+            json = JsonConvert.SerializeObject(usersData, Formatting.Indented);
+            await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, USERS_DATABASE_JSON), json).ConfigureAwait(false);
+
+            Console.WriteLine($"\n[Discord Data Handler] Saving users data...\n");
         }
 
-        public void Travel(CommandContext ctx)
+        public void RegisterNewUserIfNeeded(CommandContext ctx, ref UserData user)
         {
-            UserData user = usersData.Find(data => data.userId == ctx.User.Id);
-
             bool isNewUser = user == null;
             if (isNewUser)
             {
@@ -69,6 +85,14 @@ namespace DiscordBot.Services
                 user.userId = ctx.User.Id;
                 usersData.Add(user);
             }
+        }
+
+        public void Travel(CommandContext ctx)
+        {
+            UserData user = GetUser(ctx.User.Id);
+
+            RegisterNewUserIfNeeded(ctx, ref user);
+
 
             if (DateTime.Compare(user.timeLastTravel.AddDays(1).ToUniversalTime(), DateTime.Now.ToUniversalTime()) == 1)
             {
@@ -99,23 +123,19 @@ namespace DiscordBot.Services
             builder.WithContent(content);
             builder.WithFile(stream);
 
-            ctx.Channel.SendMessageAsync(builder);
+            ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
+            SaveUsersData().ConfigureAwait(false);
         }
 
         public void ShowAkashaProfile(CommandContext ctx)
         {
-            UserData user = usersData.Find(data => data.userId == ctx.User.Id);
+            UserData user = GetUser(ctx.User.Id);
 
-            bool isNewUser = user == null;
-            if (isNewUser)
-            {
-                user = new UserData();
-                user.userId = ctx.User.Id;
-                usersData.Add(user);
-            }
+            RegisterNewUserIfNeeded(ctx, ref user);
 
+            string folder = Path.Combine(Directory.GetCurrentDirectory(), CHARACTER_FOLDER, AKASHA_BANNERS_FOLDER);
             var equippedChar = user.currentEquippedCharacter;
-            var iconPath = equippedChar == null ? DEFAULT_ICON_EREMITE_ID : Path.Combine(Directory.GetCurrentDirectory(), user.currentEquippedCharacter.imageIconPath);
+            var iconPath = equippedChar == null ? Path.Combine(folder, DEFAULT_ICON_EREMITE_ID) : Path.Combine(folder, $"{user.currentEquippedCharacter.imageAkashaBannerPath}");
 
             string currentChar = equippedChar == null ? "None, use !pull to get one :)" : equippedChar.characterName;
             string characterBuff = equippedChar == null ? "None, use !setcharacter [name] or !pull to get one :)" : equippedChar.perkInfo;
@@ -126,8 +146,47 @@ namespace DiscordBot.Services
             builder.WithFile(File.OpenRead(iconPath));
             builder.WithContent(eremiteID);
 
-            ctx.Channel.SendMessageAsync(builder);
+            ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
         }
+
+        public async Task Pull(CommandContext ctx, UserData user)
+        {
+            Random rnd = new Random();
+
+            float starsChance = (float)rnd.NextDouble();
+            List<Character> charactersFromWhoToRoll = new List<Character>();
+
+            if(starsChance <= tenStarChance)
+            {
+                charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 10);
+            }
+            else if(starsChance <= fiveStarChance)
+            {
+                charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 5);
+            }
+            else if(starsChance <= fourStarChance)
+            {
+                charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 4);
+            }
+            else
+            {
+                charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 3);
+            }
+
+            var characterPulled = charactersFromWhoToRoll[rnd.Next(0, charactersFromWhoToRoll.Count)];
+            string pathToBannerImg = Path.Combine(Directory.GetCurrentDirectory(), CHARACTER_FOLDER, characterPulled.imagePullBannerPath);
+
+            var builder = new DiscordMessageBuilder();
+            builder.WithFile(File.OpenRead(pathToBannerImg));
+            builder.WithContent($"```\n{ctx.Member.DisplayName} pulled a {characterPulled.characterName} <{characterPulled.starsRarity}☆> ! Congrats!\n```");
+
+            await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
+            if(!user.characters.Contains(characterPulled) && characterPulled.starsRarity < 10) user.characters.Add(characterPulled);
+
+            await SaveUsersData().ConfigureAwait(false);
+        }
+
+        public UserData GetUser(ulong userSnowflakeId) => usersData.Find(data => data.userId == userSnowflakeId);
 
         private string SetupTravelImage(int moraFound, int primogemsFound)
         {

@@ -7,16 +7,19 @@ namespace DiscordBot.DiscordData
         [JsonProperty("characterName")]
         public string characterName = string.Empty;
 
-        [JsonProperty("imageIconPath")]
-        public string imageIconPath = string.Empty;
+        [JsonProperty("starsRarity")]
+        public int starsRarity = 3;
 
-        [JsonProperty("characterDescriptionPerk")]
-        public string descriptionPerk = string.Empty;
+        [JsonProperty("imageAkashaBannerPath")]
+        public string imageAkashaBannerPath = string.Empty;
+
+        [JsonProperty("imagePullBannerPath")]
+        public string imagePullBannerPath = string.Empty;
 
         [JsonProperty("perkStat")]
-        public Perk perkStat;
+        public int perkStat;
 
         [JsonProperty("perkInfo")]
-        public string perkInfo;
+        public string perkInfo = string.Empty;
     }
 }

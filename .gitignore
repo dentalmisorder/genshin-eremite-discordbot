@@ -9,4 +9,9 @@ Discord Bot/bin/Debug/netcoreapp3.1/genshinData.json
 Discord Bot/bin/Debug/netcoreapp3.1/eremites_recruit_system/eremites_recruits.json
 Discord Bot/bin/Debug/netcoreapp3.1/eremites_recruit_system/*
 Discord Bot/bin/Debug/netcoreapp3.1/travel_sumeru/usersDatabase.json
-Discord Bot/bin/Debug/netcoreapp3.1/img_characters/nochar_template.png
+Discord Bot/bin/Debug/netcoreapp3.1/characters/img/nochar_template.png
+Discord Bot/bin/Debug/netcoreapp3.1/characters/charactersDatabase.json
+Discord Bot/bin/Debug/netcoreapp3.1/characters/akasha_banners/nochar_template.sai2
+Discord Bot/bin/Debug/netcoreapp3.1/characters/akasha_banners/nochar_template.png
+Discord Bot/bin/Debug/netcoreapp3.1/characters/nochar_template.png
+Discord Bot/bin/Debug/netcoreapp3.1/characters/nochar_template.sai2

@@ -16,7 +16,7 @@ namespace DiscordBot.Services
         public const string JSON_MERCENARIES_DATABASE = "eremites_recruits.json";
         public const string DOCUMENTATION_URL = "https://docs.google.com/document/d/1kO8hHnboGeMsSsdFOT-LwKPUa2rxmlWIGya-gj65amg/edit#heading=h.b9o9wrlffcje";
 
-        public List<EremiteRecruit> recruitsCached = new List<EremiteRecruit>();
+        private List<EremiteRecruit> recruitsCached = new List<EremiteRecruit>();
 
         public EremiteRecruitSystem()
         {
@@ -69,7 +69,7 @@ namespace DiscordBot.Services
             EremiteRecruit eremite = new EremiteRecruit(ctx.Client.CurrentUser.Id, uid);
             recruitsCached.Add(eremite);
 
-            await File.WriteAllTextAsync(fullPath, JsonConvert.SerializeObject(recruitsCached));
+            await File.WriteAllTextAsync(fullPath, JsonConvert.SerializeObject(recruitsCached, Formatting.Indented));
 
             var builderSuccess = new DiscordMessageBuilder();
             var buttonAbout = new DiscordLinkButtonComponent(DOCUMENTATION_URL, "More about Eremites Recruit System");

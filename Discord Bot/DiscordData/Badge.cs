@@ -10,7 +10,7 @@ namespace DiscordBot.DiscordData
         [JsonProperty("badgeDescription")]
         public string badgeDescription = string.Empty;
 
-        [JsonProperty("badgeDescription")]
+        [JsonProperty("badgeEmoji")]
         public string badgeEmoji = ":heart_on_fire:";
     }
 }
