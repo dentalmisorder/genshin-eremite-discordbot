@@ -81,10 +81,11 @@ namespace DiscordBot.Services
             if (isNewUser)
             {
                 user = new UserData();
-                user.username = ctx.User.Username;
                 user.userId = ctx.User.Id;
                 usersData.Add(user);
             }
+
+            user.username = ctx.User.Username;
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace DiscordBot.Services
         /// </summary>
         /// <param name="type">Type to sort for</param>
         /// <returns></returns>
-        public List<UserData> GetTop(BestUserType type)
+        public IEnumerable<UserData> GetTop(BestUserType type)
         {
             if (usersData.Count <= 0) return null;
 
@@ -104,22 +105,24 @@ namespace DiscordBot.Services
                 sortedList.Add(usersData[i]);
             }
 
+            IEnumerable<UserData> sortedData = null;
+
             switch (type)
             {
                 case BestUserType.Mora:
-                    sortedList.OrderBy(data => data.wallet.mora);
+                    sortedData = sortedList.OrderByDescending(data => data.wallet.mora);
                     break;
 
                 case BestUserType.Primogems:
-                    sortedList.OrderBy(data => data.wallet.primogems);
+                    sortedData = sortedList.OrderByDescending(data => data.wallet.primogems);
                     break;
 
                 case BestUserType.PullingTimes:
-                    sortedList.OrderBy(data => data.timesPulled);
+                    sortedData = sortedList.OrderByDescending(data => data.timesPulled);
                     break;
             }
 
-            return sortedList;
+            return sortedData;
         }
 
         public void ShowAkashaProfile(CommandContext ctx)
@@ -140,7 +143,7 @@ namespace DiscordBot.Services
                 charactersInInventory = $"{charactersInInventory} {character.characterName}<{character.starsRarity}{starSign}> ";
             }
             string characterBuff = equippedChar == null ? "None, use !setcharacter [name] or !pull to get one :)" : equippedChar.perkInfo;
-            string eremiteID = $"```elm\n[{ctx.Member.DisplayName}] [ID:{ctx.User.Id}]\nMain Character: {currentChar}\nCharacter Buff: {characterBuff}\n\nEnrolled for Eremites Recruit System: {user.timesEremitesRecruitSystemEnrolled} | Welkin Moon won: {user.timesWelkinWon}\nTimes traveled: {user.timesTraveled} | Teapot visited: {user.timesTeapotVisited} times\nCharacters Obtained: {charactersInInventory}\nMora: {user.wallet.mora} | Primos: {user.wallet.primogems}\n```";
+            string eremiteID = $"```elm\n[{ctx.Member.DisplayName}] [ID:{ctx.User.Id}]\n\nMain Character: {currentChar}\nCharacter Buff: {characterBuff}\n\nEnrolled for Eremites Recruit System: {user.timesEremitesRecruitSystemEnrolled} | Welkin Moon won: {user.timesWelkinWon}\nTimes traveled: {user.timesTraveled} | Teapot visited: {user.timesTeapotVisited} times\nMora: {user.wallet.mora} | Primos: {user.wallet.primogems}\n\nCharacters Obtained: {charactersInInventory}```";
 
             var builder = new DiscordMessageBuilder();
 

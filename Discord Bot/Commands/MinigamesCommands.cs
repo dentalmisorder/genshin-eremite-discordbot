@@ -56,7 +56,7 @@ namespace DiscordBot.Commands
             string imgToSet = SetupTravelImage(award.mora, award.primogems);
 
             string path = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, $"{IMAGE_TRAVEL_BASE}{imgToSet}.png");
-            string content = $"```elm\n {ctx.User.Username} came back after traveling across desert with \n|{award.mora}| Mora\n|{award.primogems}| Primogems.\n```";
+            string content = $"```arm\n {ctx.User.Username} came back after traveling across desert with \n|{award.mora}| Mora\n|{award.primogems}| Primogems.\n```";
 
             var builder = CreateBuilderWithFileAndContent(path, content);
             await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
@@ -68,6 +68,7 @@ namespace DiscordBot.Commands
         {
             if (discordDataHandler == null) Initialize();
             UserData user = discordDataHandler.GetUser(ctx.User.Id);
+
             discordDataHandler.RegisterNewUserIfNeeded(ctx, ref user);
 
             if (DateTime.Compare(user.timeLastTeapotVisit.AddDays(daysTeapotRestrict).ToUniversalTime(), DateTime.Now.ToUniversalTime()) == 1)
@@ -81,52 +82,55 @@ namespace DiscordBot.Commands
             user.timesTeapotVisited++;
 
             string path = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, TEAPOT_IMAGE);
-            string content = $"```elm\n {ctx.User.Username} came back after visiting Teapot with \n|{award.mora}| Mora\n|{award.primogems}| Primogems.\n```";
+            string content = $"```arm\n {ctx.User.Username} came back after visiting Teapot with \n|{award.mora}| Mora\n|{award.primogems}| Primogems.\n```";
 
             var builder = CreateBuilderWithFileAndContent(path, content);
             await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
         }
 
         [Command("moratop")]
+        [Description("Get top players sorted by Mora")]
         private async Task MoraTop(CommandContext ctx)
         {
             if (discordDataHandler == null) Initialize();
             var sortedList = discordDataHandler.GetTop(BestUserType.Mora);
 
             string message = string.Empty;
-            for (int i = 0; i < sortedList.Count; i++)
+            foreach (var user in sortedList)
             {
-                message = string.Join('\n', message, $"[{sortedList[i].username}] | [MORA: {sortedList[i].wallet.mora}] | [ID:{sortedList[i].userId}]");
+                message = string.Join('\n', message, $"[{user.username}] | [MORA: {user.wallet.mora}] | [ID:{user.userId}]");
             }
 
             await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
         }
 
         [Command("primostop")]
+        [Description("Get top players sorted by Primogems")]
         private async Task PrimosTop(CommandContext ctx)
         {
             if (discordDataHandler == null) Initialize();
             var sortedList = discordDataHandler.GetTop(BestUserType.Primogems);
 
             string message = string.Empty;
-            for (int i = 0; i < sortedList.Count; i++)
+            foreach (var user in sortedList)
             {
-                message = string.Join('\n', message, $"[{sortedList[i].username}] | [PRIMOS: {sortedList[i].wallet.primogems}] | [ID:{sortedList[i].userId}]");
+                message = string.Join('\n', message, $"[{user.username}] | [PRIMOS: {user.wallet.primogems}] | [ID:{user.userId}]");
             }
 
             await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
         }
 
         [Command("pullstop")]
+        [Description("Get top players sorted by how many times user used !pull to get character")]
         private async Task PullsTop(CommandContext ctx)
         {
             if (discordDataHandler == null) Initialize();
             var sortedList = discordDataHandler.GetTop(BestUserType.PullingTimes);
 
             string message = string.Empty;
-            for (int i = 0; i < sortedList.Count; i++)
+            foreach (var user in sortedList)
             {
-                message = string.Join('\n', message, $"[{sortedList[i].username}] | [PULLS MADE: {sortedList[i].timesPulled}] | [ID:{sortedList[i].userId}]");
+                message = string.Join('\n', message, $"[{user.username}] | [PULLS: {user.timesPulled}] | [ID:{user.userId}]");
             }
 
             await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
@@ -137,10 +141,10 @@ namespace DiscordBot.Commands
             var rnd = new Random();
             int moraFound = rnd.Next(0, maxMora);
             int primogemsFound = rnd.Next(0, maxPrimos);
-
             var award = new Award(moraFound, primogemsFound);
 
-            ApplyPerk(ref award.mora, ref award.primogems, user.currentEquippedCharacter.perkStat, minigame);
+            int perk = user.currentEquippedCharacter == null ? 0 : user.currentEquippedCharacter.perkStat;
+            ApplyPerk(ref award.mora, ref award.primogems, perk, minigame);
 
             user.wallet.mora += award.mora;
             user.wallet.primogems += primogemsFound;
@@ -189,6 +193,7 @@ namespace DiscordBot.Commands
 
         private void ApplyPerk(ref int mora, ref int primos, int perk, MinigameType minigame)
         {
+
             switch (perk)
             {
                 case (int)Perk.DOUBLE_MORA:
@@ -218,6 +223,7 @@ namespace DiscordBot.Commands
                 default:
                     break;
             }
+
         }
     }
 }
