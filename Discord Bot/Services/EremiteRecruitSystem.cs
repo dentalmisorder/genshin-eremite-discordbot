@@ -17,6 +17,7 @@ namespace DiscordBot.Services
         public const string DOCUMENTATION_URL = "https://docs.google.com/document/d/1kO8hHnboGeMsSsdFOT-LwKPUa2rxmlWIGya-gj65amg/edit#heading=h.b9o9wrlffcje";
 
         private List<EremiteRecruit> recruitsCached = new List<EremiteRecruit>();
+        private DiscordDataHandler discordDataHandler = null;
 
         public EremiteRecruitSystem()
         {
@@ -69,6 +70,8 @@ namespace DiscordBot.Services
             EremiteRecruit eremite = new EremiteRecruit(ctx.Client.CurrentUser.Id, uid);
             recruitsCached.Add(eremite);
 
+            UpdateUserAkashaData(ctx);
+
             await File.WriteAllTextAsync(fullPath, JsonConvert.SerializeObject(recruitsCached, Formatting.Indented));
 
             var builderSuccess = new DiscordMessageBuilder();
@@ -83,6 +86,16 @@ namespace DiscordBot.Services
         public EremiteRecruit GetRandomWinner()
         {
             return recruitsCached[new Random().Next(0, recruitsCached.Count+1)];
+        }
+
+        private void UpdateUserAkashaData(CommandContext ctx)
+        {
+            if (discordDataHandler == null) discordDataHandler = ServicesProvider.Instance.DiscordDataHandler;
+
+            var user = discordDataHandler.GetUser(ctx.User.Id);
+            discordDataHandler.RegisterNewUserIfNeeded(ctx, ref user);
+
+            user.timesEremitesRecruitSystemEnrolled++;
         }
     }
 }

@@ -16,9 +16,8 @@ namespace DiscordBot.Services
         private List<Character> charactersData = new List<Character>();
         private bool isAutoSaveOn = true;
 
-        private int maxMoraObtainedByTraveling = 100;
-        private int maxPrimosObtainedByTraveling = 40;
         private int minutesAutoSave = 5;
+        private int maxTopUsers = 10;
 
         private float fourStarChance = 0.40f;
         private float fiveStarChance = 0.05f;
@@ -32,8 +31,6 @@ namespace DiscordBot.Services
         public const string AKASHA_BANNERS_FOLDER = "akasha_banners";
         public const string CHARACTERS_DATABASE_JSON = "charactersDatabase.json";
         public const string DEFAULT_ICON_EREMITE_ID = "nochar.png";
-        public const string TRAVEL_FOLDER = "travel";
-        public const string IMAGE_BASE = "banner_travel_";
 
         public DiscordDataHandler()
         {
@@ -72,8 +69,7 @@ namespace DiscordBot.Services
         {
             if (usersData.Count <= 0) return;
 
-            string json = string.Empty;
-            json = JsonConvert.SerializeObject(usersData, Formatting.Indented);
+            string json = JsonConvert.SerializeObject(usersData, Formatting.Indented);
 
             Console.WriteLine($"\n[Discord Data Handler] Saving users data...\n");
             await File.WriteAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), USERS_DATABASE_JSON), json);
@@ -85,49 +81,45 @@ namespace DiscordBot.Services
             if (isNewUser)
             {
                 user = new UserData();
+                user.username = ctx.User.Username;
                 user.userId = ctx.User.Id;
                 usersData.Add(user);
             }
         }
 
-        public void Travel(CommandContext ctx)
+        /// <summary>
+        /// Gets TOP [10 (can be changed by variable)] users by type (Mora, Primos, etc)
+        /// </summary>
+        /// <param name="type">Type to sort for</param>
+        /// <returns></returns>
+        public List<UserData> GetTop(BestUserType type)
         {
-            UserData user = GetUser(ctx.User.Id);
+            if (usersData.Count <= 0) return null;
 
-            RegisterNewUserIfNeeded(ctx, ref user);
+            int counter = usersData.Count >= maxTopUsers ? maxTopUsers : usersData.Count;
 
-
-            if (DateTime.Compare(user.timeLastTravel.AddDays(1).ToUniversalTime(), DateTime.Now.ToUniversalTime()) == 1)
+            List<UserData> sortedList = new List<UserData>();
+            for (int i = 0; i < counter; i++)
             {
-                ctx.Member.SendMessageAsync($"You can send travel expedition only once a day! Come check commissions board tomorrow!");
-                return;
+                sortedList.Add(usersData[i]);
             }
 
-            var rnd = new Random();
-            int moraFound = rnd.Next(0, maxMoraObtainedByTraveling);
-            int primogemsFound = rnd.Next(0, maxPrimosObtainedByTraveling);
+            switch (type)
+            {
+                case BestUserType.Mora:
+                    sortedList.OrderBy(data => data.wallet.mora);
+                    break;
 
-            user.wallet.mora += moraFound;
-            user.wallet.primogems += primogemsFound;
-            user.timeLastTravel = DateTime.Now;
+                case BestUserType.Primogems:
+                    sortedList.OrderBy(data => data.wallet.primogems);
+                    break;
 
-            //save if it was just created user to our list of users
-            //it will save it automatically if auto-save is On
+                case BestUserType.PullingTimes:
+                    sortedList.OrderBy(data => data.timesPulled);
+                    break;
+            }
 
-
-            string imgToSet = SetupTravelImage(moraFound, primogemsFound);
-
-            string path = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, $"{IMAGE_BASE}{imgToSet}.png");
-            var stream = File.OpenRead(path);
-
-            var builder = new DiscordMessageBuilder();
-
-            string content = $"```elm\n {ctx.User.Username} came back after traveling across desert with \n|{moraFound}| Mora\n|{primogemsFound}| Primogems.\n```";
-            builder.WithContent(content);
-            builder.WithFile(stream);
-
-            ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
-            SaveUsersData().ConfigureAwait(false);
+            return sortedList;
         }
 
         public void ShowAkashaProfile(CommandContext ctx)
@@ -148,7 +140,7 @@ namespace DiscordBot.Services
                 charactersInInventory = $"{charactersInInventory} {character.characterName}<{character.starsRarity}{starSign}> ";
             }
             string characterBuff = equippedChar == null ? "None, use !setcharacter [name] or !pull to get one :)" : equippedChar.perkInfo;
-            string eremiteID = $"```elm\n[{ctx.Member.DisplayName}]\nMain Character: {currentChar}\nCharacter Buff: {characterBuff}\n\nEnrolled for Eremites Recruit System: {user.timesEremitesRecruitSystemEnrolled} | Welkin Moon won: {user.timesWelkinWon}\nCharacters Obtained: {charactersInInventory}\nMora: {user.wallet.mora} | Primos: {user.wallet.primogems}\n```";
+            string eremiteID = $"```elm\n[{ctx.Member.DisplayName}] [ID:{ctx.User.Id}]\nMain Character: {currentChar}\nCharacter Buff: {characterBuff}\n\nEnrolled for Eremites Recruit System: {user.timesEremitesRecruitSystemEnrolled} | Welkin Moon won: {user.timesWelkinWon}\nTimes traveled: {user.timesTraveled} | Teapot visited: {user.timesTeapotVisited} times\nCharacters Obtained: {charactersInInventory}\nMora: {user.wallet.mora} | Primos: {user.wallet.primogems}\n```";
 
             var builder = new DiscordMessageBuilder();
 
@@ -162,19 +154,48 @@ namespace DiscordBot.Services
         {
             Random rnd = new Random();
 
+            var characterPulled = PullSilent(rnd);
+            string pathToBannerImg = Path.Combine(Directory.GetCurrentDirectory(), CHARACTER_FOLDER, characterPulled.imagePullBannerPath);
+
+            var builder = new DiscordMessageBuilder();
+            builder.WithFile(File.OpenRead(pathToBannerImg));
+            builder.WithContent($"```\n{ctx.Member.DisplayName} pulled a {characterPulled.characterName} <{characterPulled.starsRarity}{starSign}> ! Congrats!\n```");
+
+            user.AddPulledCharacter(characterPulled);
+            await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
+        }
+        
+        /// <summary>
+        /// Pulls a character and adds it to the user inventory
+        /// </summary>
+        /// <param name="user">User whom will get character in his inventory</param>
+        /// <returns></returns>
+        public Character PullSilent(Random rnd)
+        {
+            var charactersPool = PullPool(rnd);
+
+            return charactersPool[rnd.Next(0, charactersPool.Count)];
+        }
+
+        /// <summary>
+        /// Get randomizes pool of characters
+        /// </summary>
+        /// <returns></returns>
+        public List<Character> PullPool(Random rnd)
+        {
             float starsChance = (float)rnd.NextDouble();
-            List<Character> charactersFromWhoToRoll = new List<Character>();
+            List<Character> charactersFromWhoToRoll = null;
 
             //CRINGE CONSTRUCTION! TODO: refactor but not at 3 AM pls bro i beg u spend some time
-            if(starsChance <= tenStarChance)
+            if (starsChance <= tenStarChance)
             {
                 charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 10);
             }
-            else if(starsChance <= fiveStarChance)
+            else if (starsChance <= fiveStarChance)
             {
                 charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 5);
             }
-            else if(starsChance <= fourStarChance)
+            else if (starsChance <= fourStarChance)
             {
                 charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 4);
             }
@@ -183,44 +204,9 @@ namespace DiscordBot.Services
                 charactersFromWhoToRoll = charactersData.FindAll(character => character.starsRarity == 3);
             }
 
-            var characterPulled = charactersFromWhoToRoll[rnd.Next(0, charactersFromWhoToRoll.Count)];
-            string pathToBannerImg = Path.Combine(Directory.GetCurrentDirectory(), CHARACTER_FOLDER, characterPulled.imagePullBannerPath);
-
-            var builder = new DiscordMessageBuilder();
-            builder.WithFile(File.OpenRead(pathToBannerImg));
-            builder.WithContent($"```\n{ctx.Member.DisplayName} pulled a {characterPulled.characterName} <{characterPulled.starsRarity}{starSign}> ! Congrats!\n```");
-
-            await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
-            if(!user.characters.Contains(characterPulled) || characterPulled.starsRarity >= 10) user.characters.Add(characterPulled);
+            return charactersFromWhoToRoll;
         }
 
         public UserData GetUser(ulong userSnowflakeId) => usersData.Find(data => data.userId == userSnowflakeId);
-
-        /// <summary>
-        /// Also cringe construction, TODO: refactor
-        /// </summary>
-        private string SetupTravelImage(int moraFound, int primogemsFound)
-        {
-            string imgToSet = string.Empty;
-
-            if (moraFound > 0 && primogemsFound > 0)
-            {
-                imgToSet = "primos_mora";
-            }
-            else if (moraFound > 0)
-            {
-                imgToSet = "mora";
-            }
-            else if (primogemsFound > 0)
-            {
-                imgToSet = "primos";
-            }
-            else
-            {
-                imgToSet = "nothing";
-            }
-
-            return imgToSet;
-        }
     }
 }

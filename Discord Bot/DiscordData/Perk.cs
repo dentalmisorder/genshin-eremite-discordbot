@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace DiscordBot.DiscordData
+﻿namespace DiscordBot.DiscordData
 {
     public enum Perk
     {
@@ -9,10 +7,9 @@ namespace DiscordBot.DiscordData
         DOUBLE_MORA = 2,
         DOUBLE_PRIMOS_LOWER_MORA = 3,
         DOUBLE_PRIMOS = 4,
-        DOUBLE_TRAVEL = 5,
-        TWICE_TRAVEL_BOUNTY = 6,
-        WELKIN_EREMITE_RECRUIT_ID_WRITE_TWICE = 7,
-        WELKIN_EREMITE_RECRUIT_ID_WRITE_TRIPLE_NO_PRIMOS = 8,
-        GUARANTEED_NEXT_WELKIN = 9
+        TWICE_TRAVEL_BOUNTY = 5,
+        WELKIN_EREMITE_RECRUIT_ID_WRITE_TWICE = 6,
+        WELKIN_EREMITE_RECRUIT_ID_WRITE_TRIPLE_NO_PRIMOS = 7,
+        GUARANTEED_NEXT_WELKIN = 8
     }
 }

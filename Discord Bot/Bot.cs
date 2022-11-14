@@ -5,7 +5,7 @@ using DSharpPlus;
 using DSharpPlus.EventArgs;
 using DSharpPlus.CommandsNext;
 using Newtonsoft.Json;
-using DiscordBot.Services;
+using DiscordBot.Commands;
 using System;
 
 namespace DiscordBot
@@ -40,6 +40,7 @@ namespace DiscordBot
             Commands = Client.UseCommandsNext(commandsConfig);
             Commands.RegisterCommands<MainCommands>();
             Commands.RegisterCommands<UtilityCommands>();
+            Commands.RegisterCommands<MinigamesCommands>();
 
             await Client.ConnectAsync().ConfigureAwait(false);
 

@@ -4,7 +4,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DiscordBot.Services;
 
-namespace DiscordBot
+namespace DiscordBot.Commands
 {
     class MainCommands : BaseCommandModule
     {
