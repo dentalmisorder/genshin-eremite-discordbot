@@ -3,6 +3,8 @@ using DSharpPlus.Entities;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DiscordBot.Services;
+using System;
+using System.Linq;
 
 namespace DiscordBot.Commands
 {
@@ -26,6 +28,11 @@ namespace DiscordBot.Commands
         public async Task GetStats(CommandContext ctx, int uid)
         {
             if (namecardsHandler == null) Initialize();
+            if (uid.ToString().Length > 9)
+            {
+                await ctx.Channel.SendMessageAsync("Your UID is longer then 9 digits. Copy your UID from Genshin Account (which is in lower right corner) and paste it here.").ConfigureAwait(false);
+                return;
+            }
 
             var userData = await GenshinDataHandler.LoadGenshinUserData(ctx, uid);
 
@@ -57,14 +64,55 @@ namespace DiscordBot.Commands
         }
 
         [Command("enroll")]
-        [Description("Enrolling in weekly FREE Welkin, all you need is to put UID, 1 UID per user and 1 Welkin per week. It is officially supported by Razer Gold. More: https://github.com/dentalmisorder/discordbot")]
+        [Description("Enrolling in weekly FREE Welkin, all you need is to put UID, 1 UID per user and 1 Welkin per week. It is officially supported by Razer Gold. More: https://github.com/dentalmisorder/discordbot/wiki")]
         public async Task Enroll(CommandContext ctx, int uid)
         {
             if (eremiteRecruitSystem == null) Initialize();
+            if(uid.ToString().Length > 9)
+            {
+                await ctx.Channel.SendMessageAsync("Your UID is longer then 9 digits. Copy your UID from Genshin Account (which is in lower right corner) and paste it here.").ConfigureAwait(false);
+                return;
+            }
 
             //TODO: set UID in .json with all UIDs
             await eremiteRecruitSystem.Enroll(ctx, uid).ConfigureAwait(false);
         }
+
+        [Command("welkinwinners")]
+        [Description("Showing all the winners of Free Welkin Moon from past Week. To enroll simply type !enroll [genshin UID], thats all, !pull some characters to improve your luck and positions!")]
+        public async Task WelkinWinners(CommandContext ctx)
+        {
+            if (eremiteRecruitSystem == null) Initialize();
+
+            var resultsDb = eremiteRecruitSystem.GetResultsDb();
+            var results = resultsDb.latestResult;
+
+            if (results == null)
+            {
+                await ctx.Channel.SendMessageAsync("There is no winners data, its probably the first weekly drop or gifts are still being provided from previous Welkin drop").ConfigureAwait(false);
+                return;
+            }
+
+            string guaranteed = string.Empty;
+            if(results.guaranteedEremitesWon != null)
+            {
+                foreach (var garantWinner in results.guaranteedEremitesWon)
+                {
+                    guaranteed = $"{guaranteed} | {garantWinner}";
+                }
+            }
+
+            var builder = new DiscordMessageBuilder();
+
+            string winners = $"```arm\nRandom one: {results.randomEremiteWon.username} [{results.randomEremiteWon.clientId}]";
+            if (results.randomVipEremiteWon != null) winners = winners + $"\nRandom VIP: {results.randomVipEremiteWon}";
+            winners = winners + $"\nGuaranteed users: {guaranteed}";
+            winners = winners + $"\n\n[TIMESTAMP: {results.timestampResults.ToShortDateString()} {results.timestampResults.ToShortTimeString()}]```";
+
+            builder.WithContent(winners);
+            await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
+        }
+
 
         [Command("materials")]
         [Description("After a materials type a name of a character to get ascension stats card")]

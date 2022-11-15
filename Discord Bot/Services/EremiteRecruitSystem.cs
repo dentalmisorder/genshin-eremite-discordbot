@@ -1,4 +1,5 @@
-﻿using DiscordBot.GenshinData;
+﻿using DiscordBot.DiscordData;
+using DiscordBot.GenshinData;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using Newtonsoft.Json;
@@ -14,10 +15,19 @@ namespace DiscordBot.Services
         public const string JSON_MERCENARIES_FOLDER = "eremites_recruit_system";
         public const string IMAGE = "banner_eremite_recruit_system.png";
         public const string JSON_MERCENARIES_DATABASE = "eremites_recruits.json";
-        public const string DOCUMENTATION_URL = "https://docs.google.com/document/d/1kO8hHnboGeMsSsdFOT-LwKPUa2rxmlWIGya-gj65amg/edit#heading=h.b9o9wrlffcje";
+        public const string JSON_WINNERS_DATABASE = "eremites_won.json";
+        public const string DOCUMENTATION_URL = "https://github.com/dentalmisorder/discordbot/wiki/Enroll---Eremite-Recruit-System#whats-that-enroll-into-a-new-recruiting-system-where-you-apply-for-a-contract-and-go-out-for-weekly-commissions-to-get-rare-rewards-the-smartest-and-luckiest-one-will-get-welkin-moon-from-the-contractor";
+
+        public const DayOfWeek dayOfResults = DayOfWeek.Saturday;
 
         private List<EremiteRecruit> recruitsCached = new List<EremiteRecruit>();
+        private List<EremiteRecruit> recruitsWithGuaranteedCached = new List<EremiteRecruit>();
+        private List<EremiteRecruit> recruitsWithVipListCached = new List<EremiteRecruit>();
+
+        private RecruitSystemResultsDatabase recruitSystemResultsDatabase = null;
         private DiscordDataHandler discordDataHandler = null;
+
+        public RecruitSystemResultsDatabase GetResultsDb() => recruitSystemResultsDatabase;
 
         public EremiteRecruitSystem()
         {
@@ -25,9 +35,70 @@ namespace DiscordBot.Services
             string fullPath = Path.Combine(folderPath, JSON_MERCENARIES_DATABASE);
 
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+            CacheRecruitSystemDb();
+            StartTimer();
+
             if (!File.Exists(fullPath)) return;
 
             CacheRecruits(fullPath);
+        }
+
+        private void Initialize() => discordDataHandler = ServicesProvider.Instance.DiscordDataHandler;
+
+        private void CacheRecruitSystemDb()
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), JSON_MERCENARIES_FOLDER, JSON_WINNERS_DATABASE);
+
+            recruitSystemResultsDatabase = new RecruitSystemResultsDatabase();
+            if (!File.Exists(path)) return;
+            string databaseResults = File.ReadAllText(path);
+
+            recruitSystemResultsDatabase = JsonConvert.DeserializeObject<RecruitSystemResultsDatabase>(databaseResults);
+        }
+
+        private async Task StartTimer()
+        {
+            while(true)
+            {
+                await Task.Delay(new TimeSpan(12, 0, 0));
+                await CheckDayOfResults();
+            }
+        }
+
+        private async Task CheckDayOfResults()
+        {
+            if (dayOfResults != DateTime.Now.DayOfWeek) return;
+            await SaveResults(GetRandomWinner());
+        }
+
+        private async Task SaveResults(RecruitSystemResults results)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), JSON_MERCENARIES_FOLDER, JSON_WINNERS_DATABASE);
+
+            if (File.Exists(path))
+            {
+                if (DateTime.Compare(recruitSystemResultsDatabase.timestampLastResults.AddDays(2), DateTime.Now.ToUniversalTime()) > 0) return; //if last save + 2 days greater then this time, means week isnt passed
+
+                await WriteToDatabase(recruitSystemResultsDatabase, results, path).ConfigureAwait(false);
+            }
+            else
+            {
+                await WriteToDatabase(recruitSystemResultsDatabase, results, path).ConfigureAwait(false);
+            }
+        }
+
+        private async Task WriteToDatabase(RecruitSystemResultsDatabase db, RecruitSystemResults results, string pathToWrite)
+        {
+            db.timestampLastResults = DateTime.Now.ToUniversalTime();
+
+            if (db.resultsHistory == null) db.resultsHistory = new List<RecruitSystemResults>();
+            db.resultsHistory.Add(results);
+            db.latestResult = results;
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), JSON_MERCENARIES_FOLDER, JSON_MERCENARIES_DATABASE);
+            File.Delete(path);
+
+            await File.WriteAllTextAsync(pathToWrite, JsonConvert.SerializeObject(db, Formatting.Indented)).ConfigureAwait(false);
         }
 
         private async Task CacheRecruits(string fullPath)
@@ -66,12 +137,11 @@ namespace DiscordBot.Services
             }
 
             if (isAlreadyEnrolled) return;
+            var user = UpdateUserAkashaData(ctx);
 
-            EremiteRecruit eremite = new EremiteRecruit(ctx.Client.CurrentUser.Id, uid);
+            EremiteRecruit eremite = new EremiteRecruit(ctx.User.Username, ctx.Client.CurrentUser.Id, uid);
             recruitsCached.Add(eremite);
-
-            UpdateUserAkashaData(ctx);
-
+            
             await File.WriteAllTextAsync(fullPath, JsonConvert.SerializeObject(recruitsCached, Formatting.Indented));
 
             var builderSuccess = new DiscordMessageBuilder();
@@ -83,19 +153,77 @@ namespace DiscordBot.Services
             await ctx.Member.SendMessageAsync(builderSuccess).ConfigureAwait(false);
         }
 
-        public EremiteRecruit GetRandomWinner()
+        public RecruitSystemResults GetRandomWinner()
         {
-            return recruitsCached[new Random().Next(0, recruitsCached.Count+1)];
+            var rnd = new Random();
+            UseActiveCharactersPerks();
+
+            return new RecruitSystemResults(
+                recruitsCached.Count > 0 ? recruitsCached[rnd.Next(0, recruitsCached.Count)] : null,
+                recruitsWithVipListCached.Count > 0 ? recruitsWithVipListCached[rnd.Next(0, recruitsWithVipListCached.Count)] : null, 
+                recruitsWithGuaranteedCached.Count > 0 ? recruitsWithGuaranteedCached : null);
         }
 
-        private void UpdateUserAkashaData(CommandContext ctx)
+        private UserData UpdateUserAkashaData(CommandContext ctx)
         {
-            if (discordDataHandler == null) discordDataHandler = ServicesProvider.Instance.DiscordDataHandler;
+            if (discordDataHandler == null) Initialize();
 
             var user = discordDataHandler.GetUser(ctx.User.Id);
             discordDataHandler.RegisterNewUserIfNeeded(ctx, ref user);
 
             user.timesEremitesRecruitSystemEnrolled++;
+            return user;
+        }
+
+        private void UseActiveCharactersPerks()
+        {
+            if (discordDataHandler == null) Initialize();
+
+            var listToCheck = recruitsCached;
+            foreach (var recruit in listToCheck)
+            {
+                var user = discordDataHandler.GetUser(recruit.clientId);
+                if (user?.currentEquippedCharacter == null) continue;
+
+                WriteAccordingToPerk(user, recruit);
+            }
+        }
+
+        private void WriteAccordingToPerk(UserData user, EremiteRecruit eremite)
+        {
+            var equippedChar = user.currentEquippedCharacter;
+
+            if (equippedChar.perkStat == (int)Perk.GUARANTEED_NEXT_WELKIN)
+            {
+                recruitsCached.Remove(eremite);
+                recruitsWithGuaranteedCached.Add(eremite);
+
+                if (equippedChar.starsRarity >= 10)
+                {
+                    user.characters.Remove(user.currentEquippedCharacter);
+                    user.currentEquippedCharacter = null;
+                }
+            }
+            else if(equippedChar.perkStat == (int)Perk.VIP_LIST_NEXT_WELKIN)
+            {
+                recruitsCached.Remove(eremite);
+                recruitsWithVipListCached.Add(eremite);
+
+                if (equippedChar.starsRarity >= 10)
+                {
+                    user.characters.Remove(user.currentEquippedCharacter);
+                    user.currentEquippedCharacter = null;
+                }
+            }
+            else if (equippedChar.perkStat == (int)Perk.WELKIN_EREMITE_RECRUIT_ID_WRITE_TWICE)
+            {
+                recruitsCached.Add(eremite);
+            }
+            else if (equippedChar.perkStat == (int)Perk.WELKIN_EREMITE_RECRUIT_ID_WRITE_TRIPLE_NO_PRIMOS)
+            {
+                recruitsCached.Add(eremite);
+                recruitsCached.Add(eremite);
+            }
         }
     }
 }
