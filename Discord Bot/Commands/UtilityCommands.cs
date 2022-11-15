@@ -135,6 +135,8 @@ namespace DiscordBot.Commands
         [Command("setcharacter")]
         public async Task SetMainCharacter(CommandContext ctx, string characterName, string characterSurname)
         {
+            if (discordDataHandler == null) Initialize();
+
             UserData user = discordDataHandler.GetUser(ctx.User.Id);
             string twoPieceName = $"{characterName} {characterSurname}";
             if (user == null)

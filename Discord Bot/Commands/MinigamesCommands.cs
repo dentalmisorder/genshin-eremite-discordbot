@@ -19,6 +19,8 @@ namespace DiscordBot.Commands
         private int hoursTravelRestrict = 1;
 
         private int fishblastingMinutesRestriction = 5;
+        private int minutesCooldownDependingOnTeam = 3;
+        private int chancesPerCharacterResetCDTravel = 5;
 
         private int maxMoraObtainedByTeapot = 500;
         private int maxPrimosObtainedByTeapot = 160;
@@ -48,10 +50,10 @@ namespace DiscordBot.Commands
                 await ctx.Channel.SendMessageAsync($"You can send travel expedition only once an hour! Come check commissions board at {user.timeLastTravel.AddHours(hoursTravelRestrict).ToUniversalTime().ToShortTimeString()} UTC!").ConfigureAwait(false);
                 return;
             }
-
-            var award = SentTimeGatedEvent(user, maxMoraObtainedByTraveling, maxPrimosObtainedByTraveling, MinigameType.Travel);
             user.timeLastTravel = DateTime.Now;
             user.timesTraveled++;
+
+            var award = SentTimeGatedEvent(ref user, maxMoraObtainedByTraveling, maxPrimosObtainedByTraveling, ctx, MinigameType.Travel);
 
             string imgToSet = SetupTravelImage(award.mora, award.primogems);
 
@@ -76,10 +78,10 @@ namespace DiscordBot.Commands
                 await ctx.Member.SendMessageAsync($"You can visit teapot only once a day! Come check after 24 hours!").ConfigureAwait(false);
                 return;
             }
-
-            var award = SentTimeGatedEvent(user, maxMoraObtainedByTeapot, maxPrimosObtainedByTeapot, MinigameType.Teapot);
             user.timeLastTeapotVisit = DateTime.Now;
             user.timesTeapotVisited++;
+
+            var award = SentTimeGatedEvent(ref user, maxMoraObtainedByTeapot, maxPrimosObtainedByTeapot, ctx, MinigameType.Teapot);
 
             string path = Path.Combine(Directory.GetCurrentDirectory(), TRAVEL_FOLDER, TEAPOT_IMAGE);
             string content = $"```arm\n {ctx.User.Username} came back after visiting Teapot with \n|{award.mora}| Mora\n|{award.primogems}| Primogems.\n```";
@@ -136,7 +138,7 @@ namespace DiscordBot.Commands
             await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
         }
 
-        private Award SentTimeGatedEvent(UserData user, int maxMora, int maxPrimos, MinigameType minigame)
+        private Award SentTimeGatedEvent(ref UserData user, int maxMora, int maxPrimos, CommandContext ctx, MinigameType minigame)
         {
             var rnd = new Random();
             int moraFound = rnd.Next(0, maxMora);
@@ -144,7 +146,7 @@ namespace DiscordBot.Commands
             var award = new Award(moraFound, primogemsFound);
 
             int perk = user.currentEquippedCharacter == null ? 0 : user.currentEquippedCharacter.perkStat;
-            ApplyPerk(award, perk, minigame);
+            user = ApplyPerk(award, perk, user, ctx, minigame);
 
             user.wallet.mora += award.mora;
             user.wallet.primogems += award.primogems;
@@ -191,7 +193,7 @@ namespace DiscordBot.Commands
             return imgToSet;
         }
 
-        private void ApplyPerk(Award award, int perk, MinigameType minigame)
+        private UserData ApplyPerk(Award award, int perk, UserData user, CommandContext ctx, MinigameType minigame)
         {
 
             switch (perk)
@@ -219,10 +221,29 @@ namespace DiscordBot.Commands
                     award.mora = award.mora * 2;
                     award.primogems = award.primogems * 2;
                     break;
+                case (int)Perk.LOWER_TRAVEL_COOLDOWN_DEPEND_TEAM:
+                    if (minigame != MinigameType.Travel) break;
+                    int minutesCooldownDecrease = -1 * (minutesCooldownDependingOnTeam * user.characters.Count);
+                    user.timeLastTravel = user.timeLastTravel.AddMinutes(minutesCooldownDecrease);
+                    ctx.Channel.SendMessageAsync($"```Your cooldown of !travel was decreased by {minutesCooldownDecrease} minutes```");
+                    break;
+
+                case (int)Perk.CHANCE_TO_RESET_COOLDOWN_TRAVEL_BASED_TEAM:
+                    if (minigame != MinigameType.Travel) break;
+                    int chance = (user.characters.Count-1) * chancesPerCharacterResetCDTravel;
+                    Random rnd = new Random();
+                    if(rnd.Next(0, 100) < chance)
+                    {
+                        user.timeLastTravel = user.timeLastTravel.AddDays(-hoursTravelRestrict);
+                        ctx.Channel.SendMessageAsync("```You got buff perk proc and your !travel cd restored.```");
+                    }
+                    break;
 
                 default:
                     break;
             }
+
+            return user;
         }
     }
 }
