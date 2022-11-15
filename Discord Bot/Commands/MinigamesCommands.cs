@@ -144,10 +144,10 @@ namespace DiscordBot.Commands
             var award = new Award(moraFound, primogemsFound);
 
             int perk = user.currentEquippedCharacter == null ? 0 : user.currentEquippedCharacter.perkStat;
-            ApplyPerk(ref award.mora, ref award.primogems, perk, minigame);
+            ApplyPerk(award, perk, minigame);
 
             user.wallet.mora += award.mora;
-            user.wallet.primogems += primogemsFound;
+            user.wallet.primogems += award.primogems;
 
             return award;
         }
@@ -191,39 +191,38 @@ namespace DiscordBot.Commands
             return imgToSet;
         }
 
-        private void ApplyPerk(ref int mora, ref int primos, int perk, MinigameType minigame)
+        private void ApplyPerk(Award award, int perk, MinigameType minigame)
         {
 
             switch (perk)
             {
                 case (int)Perk.DOUBLE_MORA:
-                    mora *= 2;
+                    award.mora = award.mora * 2;
                     break;
 
                 case (int)Perk.DOUBLE_MORA_LOWER_PRIMOS:
-                    mora *= 2;
-                    primos = primos > 0 ? primos / 2 : 0;
+                    award.mora = award.mora * 2;
+                    award.primogems = award.primogems > 0 ? award.primogems / 2 : 0;
                     break;
 
                 case (int)Perk.DOUBLE_PRIMOS:
-                    primos *= 2;
+                    award.primogems = award.primogems * 2;
                     break;
 
                 case (int)Perk.DOUBLE_PRIMOS_LOWER_MORA:
-                    primos *= 2;
-                    mora = mora > 0 ? mora / 2 : 0;
+                    award.primogems = award.primogems * 2;
+                    award.mora = award.mora > 0 ? award.mora / 2 : 0;
                     break;
 
                 case (int)Perk.TWICE_TRAVEL_BOUNTY:
                     if (minigame != MinigameType.Travel) break;
-                    mora *= 2;
-                    primos *= 2;
+                    award.mora = award.mora * 2;
+                    award.primogems = award.primogems * 2;
                     break;
 
                 default:
                     break;
             }
-
         }
     }
 }
