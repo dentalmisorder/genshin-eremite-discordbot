@@ -149,7 +149,7 @@ namespace DiscordBot.Commands
             user.wallet.mora += award.mora;
             user.wallet.primogems += primogemsFound;
 
-            return new Award(moraFound, primogemsFound);
+            return award;
         }
 
         private DiscordMessageBuilder CreateBuilderWithFileAndContent(string filePath, string content)
@@ -201,7 +201,7 @@ namespace DiscordBot.Commands
                     break;
 
                 case (int)Perk.DOUBLE_MORA_LOWER_PRIMOS:
-                    mora *= mora;
+                    mora *= 2;
                     primos = primos > 0 ? primos / 2 : 0;
                     break;
 
@@ -216,8 +216,8 @@ namespace DiscordBot.Commands
 
                 case (int)Perk.TWICE_TRAVEL_BOUNTY:
                     if (minigame != MinigameType.Travel) break;
-                    mora *= mora;
-                    primos *= primos;
+                    mora *= 2;
+                    primos *= 2;
                     break;
 
                 default:
