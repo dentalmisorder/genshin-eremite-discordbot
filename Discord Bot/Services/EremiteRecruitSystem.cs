@@ -68,7 +68,18 @@ namespace DiscordBot.Services
         private async Task CheckDayOfResults()
         {
             if (dayOfResults != DateTime.Now.DayOfWeek) return;
+            ResetAllDestroyable();
             await SaveResults(GetRandomWinner());
+        }
+
+        private void ResetAllDestroyable()
+        {
+            if (discordDataHandler == null) Initialize();
+            var allUsers = discordDataHandler.GetAllUsers();
+            foreach (var user in allUsers)
+            {
+                if (user.characters.Count > 0) user.characters.RemoveAll(character => character.shouldBeDestroyed);
+            }
         }
 
         private async Task SaveResults(RecruitSystemResults results)
@@ -183,9 +194,13 @@ namespace DiscordBot.Services
             foreach (var recruit in listToCheck)
             {
                 var user = discordDataHandler.GetUser(recruit.clientId);
-                if (user?.currentEquippedCharacter == null) continue;
+                if (user == null) continue;
+
+
+                if (user.currentEquippedCharacter == null) continue;
 
                 WriteAccordingToPerk(user, recruit);
+                if (user.characters.Count > 0) user.characters.RemoveAll(character => character.shouldBeDestroyedOnEnroll);
             }
         }
 

@@ -18,9 +18,13 @@ namespace DiscordBot.Commands
         private int maxPrimosObtainedByTraveling = 80;
         private int hoursTravelRestrict = 1;
 
-        private int fishblastingMinutesRestriction = 5;
         private int minutesCooldownDependingOnTeam = 3;
         private int chancesPerCharacterResetCDTravel = 5;
+
+        private int lowAmountPrimogemsPerk = 10;
+
+        private int chanceCAPReset = 75;
+        private int minutesCAPReset = 40;
 
         private int maxMoraObtainedByTeapot = 500;
         private int maxPrimosObtainedByTeapot = 160;
@@ -195,6 +199,7 @@ namespace DiscordBot.Commands
 
         private UserData ApplyPerk(Award award, int perk, UserData user, CommandContext ctx, MinigameType minigame)
         {
+            int chance = 0;
 
             switch (perk)
             {
@@ -224,18 +229,32 @@ namespace DiscordBot.Commands
                 case (int)Perk.LOWER_TRAVEL_COOLDOWN_DEPEND_TEAM:
                     if (minigame != MinigameType.Travel) break;
                     int minutesCooldownDecrease = -1 * (minutesCooldownDependingOnTeam * user.characters.Count);
+                    minutesCooldownDecrease = minutesCooldownDecrease > minutesCAPReset ? minutesCAPReset : minutesCooldownDecrease;
                     user.timeLastTravel = user.timeLastTravel.AddMinutes(minutesCooldownDecrease);
                     ctx.Channel.SendMessageAsync($"```Your cooldown of !travel was decreased by {minutesCooldownDecrease} minutes```");
                     break;
 
                 case (int)Perk.CHANCE_TO_RESET_COOLDOWN_TRAVEL_BASED_TEAM:
                     if (minigame != MinigameType.Travel) break;
-                    int chance = (user.characters.Count-1) * chancesPerCharacterResetCDTravel;
-                    Random rnd = new Random();
-                    if(rnd.Next(0, 100) < chance)
+                    if(GenerateChance(user.characters.Count))
                     {
                         user.timeLastTravel = user.timeLastTravel.AddDays(-hoursTravelRestrict);
                         ctx.Channel.SendMessageAsync("```You got buff perk proc and your !travel cd restored.```");
+                    }
+                    break;
+                case (int)Perk.CONVERT_MORA_INTO_PRIMOGEMS_TRAVEL:
+                    if (minigame != MinigameType.Travel) break;
+                    award = ConvertMoraInPrimos(ctx, award);
+                    break;
+                case (int)Perk.CONVERT_MORA_INTO_PRIMOGEMS_ALL:
+                    award = ConvertMoraInPrimos(ctx, award);
+                    break;
+                case (int)Perk.DOUBLE_CHANCE_TO_RESET_COOLDOWN_TEAPOT_BASED_TEAM:
+                    if (minigame != MinigameType.Teapot) break;
+                    if(GenerateChance(user.characters.Count * 2))
+                    {
+                        user.timeLastTeapotVisit = user.timeLastTeapotVisit.AddDays(-daysTeapotRestrict);
+                        ctx.Channel.SendMessageAsync("```You got buff perk proc and your !teapot cd restored.```");
                     }
                     break;
 
@@ -244,6 +263,28 @@ namespace DiscordBot.Commands
             }
 
             return user;
+        }
+
+        private bool GenerateChance(int chancesGenerateBasedOn)
+        {
+            int chance = chancesGenerateBasedOn * chancesPerCharacterResetCDTravel;
+            chance = chance > chanceCAPReset ? chanceCAPReset : chance;
+            Random rnd = new Random();
+            return rnd.Next(0, 100) < chance;
+        }
+
+        private Award ConvertMoraInPrimos(CommandContext ctx, Award award)
+        {
+            if (award.mora > 3)
+            {
+                int converted = (int)(award.mora / 3);
+                award.primogems += converted;
+                award.mora = 0;
+
+                ctx.Channel.SendMessageAsync($"```[SACRIFICE Proc] Your Mora was converted with 1/3 ratio into primogems. Additional Primogems amount: {converted}```");
+            }
+
+            return award;
         }
     }
 }

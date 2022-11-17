@@ -21,5 +21,11 @@ namespace DiscordBot.DiscordData
 
         [JsonProperty("perkInfo")]
         public string perkInfo = string.Empty;
+
+        [JsonProperty("shouldBeDestroyed")]
+        public bool shouldBeDestroyed = false;
+
+        [JsonProperty("shouldBeDestroyedOnEnroll")]
+        public bool shouldBeDestroyedOnEnroll = false;
     }
 }

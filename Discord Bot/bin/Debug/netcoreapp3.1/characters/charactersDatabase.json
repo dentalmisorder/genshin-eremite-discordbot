@@ -1,0 +1,112 @@
+[
+    {
+        "characterName": "Electro Mage",
+        "starsRarity": 3,
+        "imageAkashaBannerPath": "Electro Mage.png",
+        "imagePullBannerPath": "Electro Mage.png",
+        "perkStat": 2,
+        "perkInfo": "Getting double the amount (x2) Mora from all resources (!travel, !teapot, !pull, etc.)",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": false
+    },
+    {
+        "characterName": "Gorou",
+        "starsRarity": 3,
+        "imageAkashaBannerPath": "Gorou.png",
+        "imagePullBannerPath": "Gorou.png",
+        "perkStat": 15,
+        "perkInfo": "Gorou will provide assistance! The more characters you have the more chances to reset !travel expedition. Each character in party provides 5% chance (Including Gorou, but cap is 75%). Whos a good boy?",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": false
+    },
+    {
+        "characterName": "Bosacius",
+        "starsRarity": 3,
+        "imageAkashaBannerPath": "Bosacius.png",
+        "imagePullBannerPath": "Bosacius.png",
+        "perkStat": 6,
+        "perkInfo": "[Fate] - If you !enroll [genshin UID] enrolled in Eremite Recruit System, will write your UID twice (x2) if equipped on Welkin Drop day. Will be destroyed if you enrolled in Eremite Recruit System no matter equipped or not once Welkin Drop day comes.",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": true
+    },
+    {
+      "characterName": "Jeht",
+      "starsRarity": 4,
+      "imageAkashaBannerPath": "Jeht.png",
+      "imagePullBannerPath": "Jeht.png",
+      "perkStat": 5,
+      "perkInfo": "Whenever Jeht !travel she always come back with two times more stuff then other eremites. (Applies to Mora and Primogems)",
+      "shouldBeDestroyed": false,
+      "shouldBeDestroyedOnEnroll": false
+    },
+    {
+        "characterName": "Menogias",
+        "starsRarity": 4,
+        "imageAkashaBannerPath": "Menogias.png",
+        "imagePullBannerPath": "Menogias.png",
+        "perkStat": 7,
+        "perkInfo": "[Fate and Balance] - If you !enroll [genshin UID] enrolled in Eremite Recruit System, will write your UID x3 times if equipped on Welkin Drop day, also CANT get any primogems if equipped. Will be destroyed if you enrolled in Eremite Recruit System no matter equipped or not once Welkin Drop day comes.",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": true
+    },
+    {
+        "characterName": "Indarias",
+        "starsRarity": 5,
+        "imageAkashaBannerPath": "Indarias.png",
+        "imagePullBannerPath": "Indarias.png",
+        "perkStat": 18,
+        "perkInfo": "[Clarity] - Per every character in your inventory boosts chances by 10% for teapot to be restored after used (basically, cooldown reset). Max reset chance can be obtained: 80%",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": false
+    },
+    {
+        "characterName": "Candace",
+        "starsRarity": 5,
+        "imageAkashaBannerPath": "Candace.png",
+        "imagePullBannerPath": "Candace.png",
+        "perkStat": 10,
+        "perkInfo": "Candace is a experienced warrior and protector of her own village. She been in many battles and travels and mastered teamwork. When you !travel your cooldown is gonna go lower by 3 minutes per character in your inventory (limit is -40 mins)",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": false
+    },
+    {
+        "characterName": "Xiao",
+        "starsRarity": 5,
+        "imageAkashaBannerPath": "Xiao.png",
+        "imagePullBannerPath": "Xiao.png",
+        "perkStat": 20,
+        "perkInfo": "[Sacrifice] - your Mora will be converted with 1/3 ratio into primogems from !travel",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": false
+    },
+    {
+      "characterName": "Baizhu",
+        "starsRarity": 5,
+        "imageAkashaBannerPath": "Baizhu.png",
+        "imagePullBannerPath": "Baizhu.png",
+        "perkStat": 4,
+        "perkInfo": "Baizhu knows how to contact with nature and with animals, he is getting double the Primogems (x2) from all resources due to help of his little friends. Ssss",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": false
+    },
+    {
+      "characterName": "Unknown God",
+        "starsRarity": 10,
+        "imageAkashaBannerPath": "Unknown God.png",
+        "imagePullBannerPath": "Unknown God.gif",
+        "perkStat": 8,
+        "perkInfo": "Your journey ends here! [If selected as main character (!setcharacter Unknown God) when Welkin Moon drops (Saturday), sets your UID to VIP list, and your chances are split into those people in VIP list, usually its 1-2 people so its rather 100% or 50%. VIP Queue counts separately and does not affect usuall queue, character will be vanished after Welkin drop]",
+        "shouldBeDestroyed": false,
+        "shouldBeDestroyedOnEnroll": true
+    },
+    {
+      "characterName": "Bonanus",
+        "starsRarity": 10,
+        "imageAkashaBannerPath": "Bonanus.png",
+        "imagePullBannerPath": "Bonanus.png",
+        "perkStat": 21,
+        "perkInfo": "[Sacrifice with Kindness] - your Mora will be converted with 1/3 ratio into primogems from ALL resources (!travel, !teapot, !pull, etc.). Kindness will not delay poor yaksha fate, still will be destroyed on Welkin drop day no matter equipped or not or even enrolled in Eremite System or not, still card will be vanished..",
+        "shouldBeDestroyed": true,
+        "shouldBeDestroyedOnEnroll": true
+    }
+]

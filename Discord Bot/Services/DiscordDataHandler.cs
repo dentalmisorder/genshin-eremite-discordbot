@@ -32,6 +32,8 @@ namespace DiscordBot.Services
         public const string CHARACTERS_DATABASE_JSON = "charactersDatabase.json";
         public const string DEFAULT_ICON_EREMITE_ID = "nochar.png";
 
+        public List<UserData> GetAllUsers() => usersData;
+
         public DiscordDataHandler()
         {
             string fullPathDatabase = Path.Combine(Directory.GetCurrentDirectory(), USERS_DATABASE_JSON);
