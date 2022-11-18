@@ -80,11 +80,13 @@ namespace DiscordBot.Commands
             Character bestCharacter = null;
             List<string> charactersPulled = new List<string>();
             Random rnd = new Random();
+            int cashbackValue = 0;
 
             for (int i = 0; i < times; i++)
             {
                 var characterPulled = discordDataHandler.PullSilent(rnd);
                 user.AddPulledCharacter(characterPulled);
+                cashbackValue += CashbackService.CashbackIfNeeded(user, characterPulled);
 
                 if (bestCharacter == null) bestCharacter = characterPulled;
                 if (bestCharacter.starsRarity < characterPulled.starsRarity) bestCharacter = characterPulled;
@@ -93,7 +95,7 @@ namespace DiscordBot.Commands
 
             string messageCharacters = string.Join('|', charactersPulled);
 
-            string content = $"```{ctx.User.Username} pulled these characters: {messageCharacters}\nBest one: {bestCharacter.characterName}```";
+            string content = $"```{ctx.User.Username} pulled these characters: {messageCharacters}\nBest one: {bestCharacter.characterName}\nCashback: {cashbackValue} primogems\n```";
             var builder = new DiscordMessageBuilder();
 
             builder.WithFile(File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), DiscordDataHandler.CHARACTER_FOLDER, bestCharacter.imagePullBannerPath)));

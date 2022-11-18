@@ -14,7 +14,7 @@ namespace DiscordBot.Commands
     {
         private DiscordDataHandler discordDataHandler = null;
 
-        private int maxMoraObtainedByTraveling = 200;
+        private int maxMoraObtainedByTraveling = 350;
         private int maxPrimosObtainedByTraveling = 80;
         private int hoursTravelRestrict = 1;
 
@@ -102,9 +102,9 @@ namespace DiscordBot.Commands
             var sortedList = discordDataHandler.GetTop(BestUserType.Mora);
 
             string message = string.Empty;
-            foreach (var user in sortedList)
+            for (int i = 0; i < sortedList.Count; i++)
             {
-                message = string.Join('\n', message, $"[{user.username}] | [MORA: {user.wallet.mora}] | [ID:{user.userId}]");
+                message = string.Join('\n', message, $"[{sortedList[i].username}] | [MORA: {sortedList[i].wallet.mora}] | [ID:{sortedList[i].userId}]");
             }
 
             await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
@@ -118,9 +118,9 @@ namespace DiscordBot.Commands
             var sortedList = discordDataHandler.GetTop(BestUserType.Primogems);
 
             string message = string.Empty;
-            foreach (var user in sortedList)
+            for (int i = 0; i < sortedList.Count; i++)
             {
-                message = string.Join('\n', message, $"[{user.username}] | [PRIMOS: {user.wallet.primogems}] | [ID:{user.userId}]");
+                message = string.Join('\n', message, $"[{sortedList[i].username}] | [PRIMOS: {sortedList[i].wallet.primogems}] | [ID:{sortedList[i].userId}]");
             }
 
             await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
@@ -134,9 +134,57 @@ namespace DiscordBot.Commands
             var sortedList = discordDataHandler.GetTop(BestUserType.PullingTimes);
 
             string message = string.Empty;
-            foreach (var user in sortedList)
+            for (int i = 0; i < sortedList.Count; i++)
             {
-                message = string.Join('\n', message, $"[{user.username}] | [PULLS: {user.timesPulled}] | [ID:{user.userId}]");
+                message = string.Join('\n', message, $"[{sortedList[i].username}] | [PULLS: {sortedList[i].timesPulled}] | [ID:{sortedList[i].userId}]");
+            }
+
+            await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
+        }
+
+        [Command("traveltop")]
+        [Description("Get top players sorted by how many times user used !pull to get character")]
+        private async Task TravelTop(CommandContext ctx)
+        {
+            if (discordDataHandler == null) Initialize();
+            var sortedList = discordDataHandler.GetTop(BestUserType.TraveledTimes);
+
+            string message = string.Empty;
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                message = string.Join('\n', message, $"[{sortedList[i].username}] | [TRAVELS: {sortedList[i].timesTraveled}] | [ID:{sortedList[i].userId}]");
+            }
+
+            await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
+        }
+
+        [Command("welkintop")]
+        [Description("Get top players sorted by how many times user used !pull to get character")]
+        private async Task WelkinTop(CommandContext ctx)
+        {
+            if (discordDataHandler == null) Initialize();
+            var sortedList = discordDataHandler.GetTop(BestUserType.WelkinWonTimes);
+
+            string message = string.Empty;
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                message = string.Join('\n', message, $"[{sortedList[i].username}] | [WELKIN WON: {sortedList[i].timesWelkinWon}] | [ID:{sortedList[i].userId}]");
+            }
+
+            await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
+        }
+
+        [Command("teapottop")]
+        [Description("Get top players sorted by how many times user used !pull to get character")]
+        private async Task TeapotTop(CommandContext ctx)
+        {
+            if (discordDataHandler == null) Initialize();
+            var sortedList = discordDataHandler.GetTop(BestUserType.TeapotVisitedTimes);
+
+            string message = string.Empty;
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                message = string.Join('\n', message, $"[{sortedList[i].username}] | [TEAPOT VISITED: {sortedList[i].timesTeapotVisited}] | [ID:{sortedList[i].userId}]");
             }
 
             await ctx.Channel.SendMessageAsync($"```arm\n{message}\n```").ConfigureAwait(false);
@@ -275,13 +323,13 @@ namespace DiscordBot.Commands
 
         private Award ConvertMoraInPrimos(CommandContext ctx, Award award)
         {
-            if (award.mora > 3)
+            if (award.mora > 2)
             {
-                int converted = (int)(award.mora / 3);
+                int converted = (int)(award.mora / 2);
                 award.primogems += converted;
                 award.mora = 0;
 
-                ctx.Channel.SendMessageAsync($"```[SACRIFICE Proc] Your Mora was converted with 1/3 ratio into primogems. Additional Primogems amount: {converted}```");
+                ctx.Channel.SendMessageAsync($"```[SACRIFICE Proc] Your Mora was converted with 1/2 ratio into primogems. Additional Primogems amount: {converted}```");
             }
 
             return award;

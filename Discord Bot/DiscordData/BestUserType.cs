@@ -8,6 +8,9 @@ namespace DiscordBot.DiscordData
     {
         Mora,
         Primogems,
-        PullingTimes
+        PullingTimes,
+        TraveledTimes,
+        TeapotVisitedTimes,
+        WelkinWonTimes
     }
 }

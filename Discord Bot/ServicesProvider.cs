@@ -10,6 +10,7 @@ namespace DiscordBot.Services
         public GenshinDataHandler GenshinDataHandler { get; private set; }
         public EremiteRecruitSystem EremiteRecruitSystem { get; private set; }
         public DiscordDataHandler DiscordDataHandler { get; private set; }
+        public CashbackService CashbackService { get; private set; }
 
         public ServicesProvider()
         {
@@ -20,6 +21,7 @@ namespace DiscordBot.Services
             NamecardsHandler = new NamecardsHandler();
             EremiteRecruitSystem = new EremiteRecruitSystem();
             DiscordDataHandler = new DiscordDataHandler();
+            CashbackService = new CashbackService();
         }
     }
 }

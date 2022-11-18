@@ -75,7 +75,7 @@
         "imageAkashaBannerPath": "Xiao.png",
         "imagePullBannerPath": "Xiao.png",
         "perkStat": 20,
-        "perkInfo": "[Sacrifice] - your Mora will be converted with 1/3 ratio into primogems from !travel",
+        "perkInfo": "[Sacrifice] - your Mora will be converted with 1/2 ratio into primogems from !travel",
         "shouldBeDestroyed": false,
         "shouldBeDestroyedOnEnroll": false
     },

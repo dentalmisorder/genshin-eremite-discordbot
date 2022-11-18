@@ -95,36 +95,49 @@ namespace DiscordBot.Services
         /// </summary>
         /// <param name="type">Type to sort for</param>
         /// <returns></returns>
-        public IEnumerable<UserData> GetTop(BestUserType type)
+        public List<UserData> GetTop(BestUserType type)
         {
             if (usersData.Count <= 0) return null;
 
             int counter = usersData.Count >= maxTopUsers ? maxTopUsers : usersData.Count;
-
-            List<UserData> sortedList = new List<UserData>();
-            for (int i = 0; i < counter; i++)
-            {
-                sortedList.Add(usersData[i]);
-            }
 
             IEnumerable<UserData> sortedData = null;
 
             switch (type)
             {
                 case BestUserType.Mora:
-                    sortedData = sortedList.OrderByDescending(data => data.wallet.mora);
+                    sortedData = usersData.OrderByDescending(data => data.wallet.mora);
                     break;
 
                 case BestUserType.Primogems:
-                    sortedData = sortedList.OrderByDescending(data => data.wallet.primogems);
+                    sortedData = usersData.OrderByDescending(data => data.wallet.primogems);
                     break;
 
                 case BestUserType.PullingTimes:
-                    sortedData = sortedList.OrderByDescending(data => data.timesPulled);
+                    sortedData = usersData.OrderByDescending(data => data.timesPulled);
+                    break;
+
+                case BestUserType.TraveledTimes:
+                    sortedData = usersData.OrderByDescending(data => data.timesTraveled);
+                    break;
+
+                case BestUserType.TeapotVisitedTimes:
+                    sortedData = usersData.OrderByDescending(data => data.timesTeapotVisited);
+                    break;
+
+                case BestUserType.WelkinWonTimes:
+                    sortedData = usersData.OrderByDescending(data => data.timesWelkinWon);
                     break;
             }
 
-            return sortedData;
+            List<UserData> sortedList = new List<UserData>();
+            List<UserData> allData = sortedData.ToList();
+            for (int i = 0; i < counter; i++)
+            {
+                sortedList.Add(allData[i]);
+            }
+
+            return sortedList;
         }
 
         public void ShowAkashaProfile(CommandContext ctx)
@@ -161,10 +174,12 @@ namespace DiscordBot.Services
 
             var characterPulled = PullSilent(rnd);
             string pathToBannerImg = Path.Combine(Directory.GetCurrentDirectory(), CHARACTER_FOLDER, characterPulled.imagePullBannerPath);
+            int cashbackValue = 0;
 
+            cashbackValue += CashbackService.CashbackIfNeeded(user, characterPulled);
             var builder = new DiscordMessageBuilder();
             builder.WithFile(File.OpenRead(pathToBannerImg));
-            builder.WithContent($"```\n{ctx.Member.DisplayName} pulled a {characterPulled.characterName} <{characterPulled.starsRarity}{starSign}> ! Congrats!\n```");
+            builder.WithContent($"```\n{ctx.Member.DisplayName} pulled a {characterPulled.characterName} <{characterPulled.starsRarity}{starSign}> ! Congrats!\nCashback: {cashbackValue} primogems.\n```");
 
             user.AddPulledCharacter(characterPulled);
             await ctx.Channel.SendMessageAsync(builder).ConfigureAwait(false);
