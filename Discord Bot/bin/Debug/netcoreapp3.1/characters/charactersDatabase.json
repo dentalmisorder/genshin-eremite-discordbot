@@ -105,7 +105,7 @@
         "imageAkashaBannerPath": "Bonanus.png",
         "imagePullBannerPath": "Bonanus.png",
         "perkStat": 21,
-        "perkInfo": "[Sacrifice with Kindness] - your Mora will be converted with 1/3 ratio into primogems from ALL resources (!travel, !teapot, !pull, etc.). Kindness will not delay poor yaksha fate, still will be destroyed on Welkin drop day no matter equipped or not or even enrolled in Eremite System or not, still card will be vanished..",
+        "perkInfo": "[Sacrifice with Kindness] - your Mora will be converted with 1/1 ratio into primogems from ALL resources (!travel, !teapot, !pull, etc.). Kindness will not delay poor yaksha fate, still will be destroyed on Welkin drop day no matter equipped or not or even enrolled in Eremite System or not, still card will be vanished..",
         "shouldBeDestroyed": true,
         "shouldBeDestroyedOnEnroll": true
     }

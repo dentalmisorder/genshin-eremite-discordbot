@@ -290,12 +290,12 @@ namespace DiscordBot.Commands
                         ctx.Channel.SendMessageAsync("```You got buff perk proc and your !travel cd restored.```");
                     }
                     break;
-                case (int)Perk.CONVERT_MORA_INTO_PRIMOGEMS_TRAVEL:
+                case (int)Perk.CONVERT_MORA_INTO_PRIMOGEMS_TRAVEL_1TO2:
                     if (minigame != MinigameType.Travel) break;
-                    award = ConvertMoraInPrimos(ctx, award);
+                    award = ConvertMoraInPrimos(ctx, award, 2);
                     break;
-                case (int)Perk.CONVERT_MORA_INTO_PRIMOGEMS_ALL:
-                    award = ConvertMoraInPrimos(ctx, award);
+                case (int)Perk.CONVERT_MORA_INTO_PRIMOGEMS_ALL_1TO1:
+                    award = ConvertMoraInPrimos(ctx, award, 1);
                     break;
                 case (int)Perk.DOUBLE_CHANCE_TO_RESET_COOLDOWN_TEAPOT_BASED_TEAM:
                     if (minigame != MinigameType.Teapot) break;
@@ -321,11 +321,11 @@ namespace DiscordBot.Commands
             return rnd.Next(0, 100) < chance;
         }
 
-        private Award ConvertMoraInPrimos(CommandContext ctx, Award award)
+        private Award ConvertMoraInPrimos(CommandContext ctx, Award award, int ratio = 2)
         {
             if (award.mora > 2)
             {
-                int converted = (int)(award.mora / 2);
+                int converted = (int)(award.mora / ratio);
                 award.primogems += converted;
                 award.mora = 0;
 
