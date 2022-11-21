@@ -169,10 +169,36 @@ namespace DiscordBot.Services
             var rnd = new Random();
             UseActiveCharactersPerks();
 
-            return new RecruitSystemResults(
+            var results = new RecruitSystemResults(
                 recruitsCached.Count > 0 ? recruitsCached[rnd.Next(0, recruitsCached.Count)] : null,
                 recruitsWithVipListCached.Count > 0 ? recruitsWithVipListCached[rnd.Next(0, recruitsWithVipListCached.Count)] : null, 
                 recruitsWithGuaranteedCached.Count > 0 ? recruitsWithGuaranteedCached : null);
+
+            UpdateWinCounter(results);
+
+            return results;
+        }
+
+        private void UpdateWinCounter(RecruitSystemResults results)
+        {
+            if (results.randomEremiteWon != null)
+            {
+                var randomEremite = discordDataHandler.GetUser(results.randomEremiteWon.clientId);
+                if (randomEremite != null) randomEremite.timesWelkinWon++;
+            }
+            if (results.randomVipEremiteWon != null)
+            {
+                var randomVipEremite = discordDataHandler.GetUser(results.randomVipEremiteWon.clientId);
+                if (randomVipEremite != null) randomVipEremite.timesWelkinWon++;
+            }
+
+            if (results.guaranteedEremitesWon.Count <= 0) return;
+            foreach (var guaranteed in results.guaranteedEremitesWon)
+            {
+                var user = discordDataHandler.GetUser(guaranteed.clientId);
+                if (user == null) continue;
+                user.timesWelkinWon++;
+            }
         }
 
         private UserData UpdateUserAkashaData(CommandContext ctx)

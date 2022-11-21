@@ -329,7 +329,7 @@ namespace DiscordBot.Commands
                 award.primogems += converted;
                 award.mora = 0;
 
-                ctx.Channel.SendMessageAsync($"```[SACRIFICE Proc] Your Mora was converted with 1/2 ratio into primogems. Additional Primogems amount: {converted}```");
+                ctx.Channel.SendMessageAsync($"```[SACRIFICE Proc] Your Mora was converted with 1/{ratio} ratio into primogems. Additional Primogems amount: {converted}```");
             }
 
             return award;
