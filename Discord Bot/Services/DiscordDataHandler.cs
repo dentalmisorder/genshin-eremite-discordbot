@@ -16,7 +16,7 @@ namespace DiscordBot.Services
         private List<Character> charactersData = new List<Character>();
         private bool isAutoSaveOn = true;
 
-        private int minutesAutoSave = 5;
+        private int minutesAutoSave = 10;
         private int maxTopUsers = 10;
 
         private float fourStarChance = 0.40f;

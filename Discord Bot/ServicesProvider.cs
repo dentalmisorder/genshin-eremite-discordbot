@@ -19,8 +19,8 @@ namespace DiscordBot.Services
 
             GenshinDataHandler = new GenshinDataHandler();
             NamecardsHandler = new NamecardsHandler();
-            EremiteRecruitSystem = new EremiteRecruitSystem();
             DiscordDataHandler = new DiscordDataHandler();
+            EremiteRecruitSystem = new EremiteRecruitSystem();
             CashbackService = new CashbackService();
         }
     }

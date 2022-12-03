@@ -93,19 +93,24 @@ namespace DiscordBot.Commands
                 return;
             }
 
+            string vip = string.Empty;
             string guaranteed = string.Empty;
+            string randomEremite = string.Empty;
             if(results.guaranteedEremitesWon != null)
             {
                 foreach (var garantWinner in results.guaranteedEremitesWon)
                 {
-                    guaranteed = $"{guaranteed} | {garantWinner}";
+                    guaranteed = $"{guaranteed}\n{garantWinner.username}";
                 }
             }
 
             var builder = new DiscordMessageBuilder();
 
-            string winners = $"```arm\nRandom one: {results.randomEremiteWon.username} [{results.randomEremiteWon.clientId}]";
-            if (results.randomVipEremiteWon != null) winners = winners + $"\nRandom VIP: {results.randomVipEremiteWon}";
+            string winners = $"```arm";
+            if (results.randomEremiteWon != null) randomEremite = $"{results.randomEremiteWon.username} [{ results.randomEremiteWon.clientId}]";
+            if (results.randomVipEremiteWon != null) vip = $"{results.randomVipEremiteWon.username} [{results.randomVipEremiteWon.clientId}]";
+            winners = winners + $"\nRandom Eremite: {randomEremite}";
+            winners = winners + $"\nRandom VIP user: {vip}";
             winners = winners + $"\nGuaranteed users: {guaranteed}";
             winners = winners + $"\n\n[TIMESTAMP: {results.timestampResults.ToShortDateString()} {results.timestampResults.ToShortTimeString()}]```";
 

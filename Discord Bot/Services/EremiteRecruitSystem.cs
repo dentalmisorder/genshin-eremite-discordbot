@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Services
@@ -32,15 +33,11 @@ namespace DiscordBot.Services
         public EremiteRecruitSystem()
         {
             string folderPath = Path.Combine(Directory.GetCurrentDirectory(), JSON_MERCENARIES_FOLDER);
-            string fullPath = Path.Combine(folderPath, JSON_MERCENARIES_DATABASE);
 
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
             CacheRecruitSystemDb();
+
             StartTimer();
-
-            if (!File.Exists(fullPath)) return;
-
-            CacheRecruits(fullPath);
         }
 
         private void Initialize() => discordDataHandler = ServicesProvider.Instance.DiscordDataHandler;
@@ -58,18 +55,26 @@ namespace DiscordBot.Services
 
         private async Task StartTimer()
         {
+            string folderPath = Path.Combine(Directory.GetCurrentDirectory(), JSON_MERCENARIES_FOLDER);
+            string fullPath = Path.Combine(folderPath, JSON_MERCENARIES_DATABASE);
+
+            if (File.Exists(fullPath)) await CacheRecruits(fullPath);
+
+            Console.WriteLine("\n\nStarting Timer for Welkin Moon...");
             while(true)
             {
-                await Task.Delay(new TimeSpan(12, 0, 0));
                 await CheckDayOfResults();
+                await Task.Delay(new TimeSpan(12, 0, 0));
             }
         }
 
         private async Task CheckDayOfResults()
         {
             if (dayOfResults != DateTime.Now.DayOfWeek) return;
-            ResetAllDestroyable();
+            Console.WriteLine("Checking Results...");
+
             await SaveResults(GetRandomWinner());
+            ResetAllDestroyable();
         }
 
         private void ResetAllDestroyable()
@@ -150,7 +155,7 @@ namespace DiscordBot.Services
             if (isAlreadyEnrolled) return;
             var user = UpdateUserAkashaData(ctx);
 
-            EremiteRecruit eremite = new EremiteRecruit(ctx.User.Username, ctx.Client.CurrentUser.Id, uid);
+            EremiteRecruit eremite = new EremiteRecruit(ctx.User.Username, ctx.User.Id, uid);
             recruitsCached.Add(eremite);
             
             await File.WriteAllTextAsync(fullPath, JsonConvert.SerializeObject(recruitsCached, Formatting.Indented));
@@ -192,6 +197,7 @@ namespace DiscordBot.Services
                 if (randomVipEremite != null) randomVipEremite.timesWelkinWon++;
             }
 
+            if (results.guaranteedEremitesWon == null) return;
             if (results.guaranteedEremitesWon.Count <= 0) return;
             foreach (var guaranteed in results.guaranteedEremitesWon)
             {
@@ -226,7 +232,15 @@ namespace DiscordBot.Services
                 if (user.currentEquippedCharacter == null) continue;
 
                 WriteAccordingToPerk(user, recruit);
-                if (user.characters.Count > 0) user.characters.RemoveAll(character => character.shouldBeDestroyedOnEnroll);
+
+                Character characterToDelete = null;
+                if (user.characters.Count > 0) characterToDelete = user.characters.FirstOrDefault(character => character.shouldBeDestroyedOnEnroll);
+                if (characterToDelete == null) return;
+
+                user.characters.Remove(characterToDelete);
+
+                if (user.currentEquippedCharacter == null) return;
+                if (user.currentEquippedCharacter.characterName == characterToDelete.characterName) user.currentEquippedCharacter = null;
             }
         }
 
