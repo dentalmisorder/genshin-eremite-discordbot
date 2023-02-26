@@ -63,7 +63,7 @@ namespace DiscordBot.Commands
         public async Task Pulls(CommandContext ctx, [Description("How many pulls to do?")] int times)
         {
             if (discordDataHandler == null) Initialize();
-            if (times <= 0) return;
+            if (times <= 0 || times > 100) return;
 
             var user = discordDataHandler.GetUser(ctx.User.Id);
             discordDataHandler.RegisterNewUserIfNeeded(ctx, ref user);
