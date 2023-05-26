@@ -1,0 +1,27 @@
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Eremite DiscordBot.exe
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Eremite DiscordBot.deps.json
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Eremite DiscordBot.runtimeconfig.json
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Eremite DiscordBot.runtimeconfig.dev.json
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Eremite DiscordBot.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Eremite DiscordBot.pdb
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\ConcurrentCollections.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.CommandsNext.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\DSharpPlus.Interactivity.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Emzi0767.Common.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\bin\Debug\netcoreapp3.1\System.Threading.Channels.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.csproj.AssemblyReference.cache
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.AssemblyInfoInputs.cache
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.AssemblyInfo.cs
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.csproj.CoreCompileInputs.cache
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.csproj.CopyComplete
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.dll
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.pdb
+C:\Users\DELL\Documents\GitHub\Eremite-discordbot\Discord Bot\obj\Debug\netcoreapp3.1\Eremite DiscordBot.genruntimeconfig.cache

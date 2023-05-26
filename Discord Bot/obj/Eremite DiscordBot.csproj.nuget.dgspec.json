@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\DiscordBot.csproj": {}
+    "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\Eremite DiscordBot.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\DiscordBot.csproj": {
+    "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\Eremite DiscordBot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\DiscordBot.csproj",
-        "projectName": "DiscordBot",
-        "projectPath": "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\DiscordBot.csproj",
+        "projectUniqueName": "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\Eremite DiscordBot.csproj",
+        "projectName": "Eremite DiscordBot",
+        "projectPath": "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\Eremite DiscordBot.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\DELL\\Documents\\GitHub\\Eremite-discordbot\\Discord Bot\\obj\\",
         "projectStyle": "PackageReference",
