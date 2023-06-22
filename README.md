@@ -1,5 +1,10 @@
 # C# Discord Bot (Made on DSharpPlus)
 
+<h1>[DEPRECATED]</h1>
+<h2> Bot upgraded and moved to: https://github.com/MentallyStable4sure/Eremite </h2> 
+
+***
+
 > [Commands](https://github.com/dentalmisorder/discordbot/wiki/Enroll---Eremite-Recruit-System)
 
 > [Character List](https://github.com/dentalmisorder/discordbot/wiki/Character-List)
